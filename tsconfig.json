@@ -1,0 +1,18 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": {
+    "types": ["webpack-env"],
+    "strict": true,
+    "esModuleInterop": true,
+    "target": "ES6",
+    "module": "CommonJS"
+  },
+  "include": ["enviroment.d.ts"],
+  "define": {
+    "process.env": {}
+  }
+}

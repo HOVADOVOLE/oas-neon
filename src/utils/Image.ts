@@ -44,6 +44,24 @@ export default class ImageManager {
     }
   }
   /**
+   * Aktualizace kategorie obrázku
+   */
+  public async updateCategory(id: number, categoryId: number): Promise<void> {
+    try {
+      const { error } = await this.supabase
+        .from(this.tableName)
+        .update({ category_id: categoryId })
+        .eq("id", id);
+
+      if (error) throw error;
+
+      console.log(`Category updated for image with ID: ${id}`);
+    } catch (error) {
+      console.error("Error updating category in Supabase:", error);
+      throw error;
+    }
+  }
+  /**
    * Přidání nového obrázku do Supabase Storage a uložení jeho cesty do databáze
    */
   public async addImage(

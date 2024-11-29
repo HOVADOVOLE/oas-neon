@@ -8,7 +8,7 @@ type ImageData = {
   caption: string;
   position: number;
   category_id: number;
-  category_name?: string; // Název kategorie připojený z tabulky `category`
+  category_name?: string;
 };
 
 const SUPABASE_URL = "https://bxwiyqyycdbhyrtqfbbf.supabase.co";
@@ -52,23 +52,6 @@ export default class ImageManager {
     categoryId: number
   ): Promise<void> {
     try {
-      // Ověření existence kategorie
-      const { data: category, error: categoryError } = await this.supabase
-        .from("category")
-        .select("*")
-        .eq("category_id", categoryId)
-        .maybeSingle();
-
-      if (categoryError) {
-        throw new Error(`Error retrieving category: ${categoryError.message}`);
-      }
-
-      if (!category) {
-        throw new Error(
-          `Invalid categoryId (${categoryId}). Category does not exist.`
-        );
-      }
-
       // Převod obrázku do WebP
       const webPFile = await this.convertToWebP(file);
 
@@ -181,38 +164,6 @@ export default class ImageManager {
       });
 
       if (error) throw error;
-    } catch (error) {
-      console.error("Error updating image order in Supabase:", error);
-    }
-  }
-  public async changeOrder(id: number, newPosition: number): Promise<void> {
-    try {
-      const images = await this.getImages();
-
-      const image = images.find((img) => img.id === id);
-      if (!image) {
-        console.error("Image not found");
-        return;
-      }
-
-      const updatedList = [...images];
-      const [draggedImage] = updatedList.splice(image.position, 1);
-      updatedList.splice(newPosition, 0, draggedImage);
-
-      updatedList.forEach((img, index) => {
-        img.position = index + 1;
-      });
-
-      for (const img of updatedList) {
-        const { error } = await this.supabase
-          .from(this.tableName)
-          .update({ position: img.position })
-          .eq("id", img.id);
-
-        if (error) throw error;
-      }
-
-      console.log(`Order updated for image with ID: ${id}`);
     } catch (error) {
       console.error("Error updating image order in Supabase:", error);
     }

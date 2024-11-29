@@ -151,7 +151,7 @@ const AddImagesPage = () => {
                 src={image.filePath}
                 alt={image.fileName}
                 className="w-full object-cover rounded-lg"
-                style={{ aspectRatio: "3 / 2" }}
+                style={{ aspectRatio: "16 / 9" }}
               />
               <input
                 type="text"

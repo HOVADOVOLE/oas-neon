@@ -79,8 +79,8 @@ export default function ContactForm() {
                     fill="url(#paint0_linear_6727_44729-1)"
                   ></path>
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M0 4.54673C0 2.03564 2.07211 0 4.62819 0H21.5399V0.00124069C28.9908 0.0998525 35 6.06429 35 13.4075C35 20.8123 28.8897 26.8151 21.3523 26.8151C18.6648 26.8151 16.1587 26.052 14.0463 24.7342L6.58815 31.9057C4.13431 34.2652 0 32.5573 0 29.1841V4.54673ZM11.5194 22.7055C9.15709 20.295 7.70452 17.0179 7.70452 13.4075C7.70452 12.5277 8.43056 11.8144 9.32619 11.8144C10.2218 11.8144 10.9479 12.5277 10.9479 13.4075C10.9479 19.0526 15.6061 23.6288 21.3523 23.6288C27.0985 23.6288 31.7567 19.0526 31.7567 13.4075C31.7567 7.76248 27.0985 3.18626 21.3523 3.18626H4.62819C3.86336 3.18626 3.24334 3.79536 3.24334 4.54673V29.1841C3.24334 29.7351 3.91866 30.014 4.31948 29.6286L11.5194 22.7055Z"
                     fill="url(#paint1_linear_6727_44729-1)"
                   ></path>
@@ -93,8 +93,8 @@ export default function ContactForm() {
                       y2="33.2898"
                       gradientUnits="userSpaceOnUse"
                     >
-                      <stop stop-color="#9038FF"></stop>
-                      <stop offset="0.993738" stop-color="#5551FF"></stop>
+                      <stop stopColor="#9038FF"></stop>
+                      <stop offset="0.993738" stopColor="#5551FF"></stop>
                     </linearGradient>
                     <linearGradient
                       id="paint1_linear_6727_44729-1"
@@ -104,12 +104,18 @@ export default function ContactForm() {
                       y2="33.2898"
                       gradientUnits="userSpaceOnUse"
                     >
-                      <stop stop-color="#9038FF"></stop>
-                      <stop offset="0.993738" stop-color="#5551FF"></stop>
+                      <stop stopColor="#9038FF"></stop>
+                      <stop offset="0.993738" stopColor="#5551FF"></stop>
                     </linearGradient>
                   </defs>
                 </svg>
-                <a href="javascript:;" className="flex items-center mb-6">
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // Můžete zde přidat logiku, kterou chcete provést při kliknutí
+                  }}
+                  className="flex items-center mb-6"
+                >
                   <svg
                     width="30"
                     height="30"
@@ -120,16 +126,22 @@ export default function ContactForm() {
                     <path
                       d="M22.3092 18.3098C22.0157 18.198 21.8689 18.1421 21.7145 18.1287C21.56 18.1154 21.4058 18.1453 21.0975 18.205L17.8126 18.8416C17.4392 18.9139 17.2525 18.9501 17.0616 18.9206C16.8707 18.891 16.7141 18.8058 16.4008 18.6353C13.8644 17.2551 12.1853 15.6617 11.1192 13.3695C10.9964 13.1055 10.935 12.9735 10.9133 12.8017C10.8917 12.6298 10.9218 12.4684 10.982 12.1456L11.6196 8.72559C11.6759 8.42342 11.7041 8.27233 11.6908 8.12115C11.6775 7.96998 11.6234 7.82612 11.5153 7.5384L10.6314 5.18758C10.37 4.49217 10.2392 4.14447 9.95437 3.94723C9.6695 3.75 9.29804 3.75 8.5551 3.75H5.85778C4.58478 3.75 3.58264 4.8018 3.77336 6.06012C4.24735 9.20085 5.64674 14.8966 9.73544 18.9853C14.0295 23.2794 20.2151 25.1426 23.6187 25.884C24.9335 26.1696 26.0993 25.1448 26.0993 23.7985V21.2824C26.0993 20.5428 26.0993 20.173 25.9034 19.8888C25.7076 19.6046 25.362 19.4729 24.6708 19.2096L22.3092 18.3098Z"
                       stroke="#000000"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     ></path>
                   </svg>
                   <h5 className="text-black text-base font-normal leading-6 ml-5">
                     +420 777 034 364
                   </h5>
                 </a>
-                <a href="javascript:;" className="flex items-center mb-6">
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // Můžete zde přidat logiku, kterou chcete provést při kliknutí
+                  }}
+                  className="flex items-center mb-6"
+                >
                   <svg
                     width="30"
                     height="30"
@@ -140,8 +152,8 @@ export default function ContactForm() {
                     <path
                       d="M2.81501 8.75L10.1985 13.6191C12.8358 15.2015 14.1544 15.9927 15.6032 15.9582C17.0519 15.9237 18.3315 15.0707 20.8905 13.3647L27.185 8.75M12.5 25H17.5C22.214 25 24.5711 25 26.0355 23.5355C27.5 22.0711 27.5 19.714 27.5 15C27.5 10.286 27.5 7.92893 26.0355 6.46447C24.5711 5 22.214 5 17.5 5H12.5C7.78595 5 5.42893 5 3.96447 6.46447C2.5 7.92893 2.5 10.286 2.5 15C2.5 19.714 2.5 22.0711 3.96447 23.5355C5.42893 25 7.78595 25 12.5 25Z"
                       stroke="#000000"
-                      stroke-width="2"
-                      stroke-linecap="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
                     ></path>
                   </svg>
                   <h5 className="text-black text-base font-normal leading-6 ml-5">
@@ -150,7 +162,12 @@ export default function ContactForm() {
                 </a>
 
                 <div className="flex items-center justify-center border-t border-gray-100 pt-6">
-                  <a href="javascript:;" className="mr-6">
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                    }}
+                    className="mr-6"
+                  >
                     <svg
                       width="31"
                       height="30"
@@ -171,7 +188,13 @@ export default function ContactForm() {
                       ></path>
                     </svg>
                   </a>
-                  <a href="javascript:;" className="mr-6">
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      // Můžete zde přidat logiku, kterou chcete provést při kliknutí
+                    }}
+                    className="mr-6"
+                  >
                     <svg
                       width="31"
                       height="30"
@@ -199,17 +222,23 @@ export default function ContactForm() {
                           y2="-8.07516e-07"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#FBE18A"></stop>
-                          <stop offset="0.21" stop-color="#FCBB45"></stop>
-                          <stop offset="0.38" stop-color="#F75274"></stop>
-                          <stop offset="0.52" stop-color="#D53692"></stop>
-                          <stop offset="0.74" stop-color="#8F39CE"></stop>
-                          <stop offset="1" stop-color="#5B4FE9"></stop>
+                          <stop stopColor="#FBE18A"></stop>
+                          <stop offset="0.21" stopColor="#FCBB45"></stop>
+                          <stop offset="0.38" stopColor="#F75274"></stop>
+                          <stop offset="0.52" stopColor="#D53692"></stop>
+                          <stop offset="0.74" stopColor="#8F39CE"></stop>
+                          <stop offset="1" stopColor="#5B4FE9"></stop>
                         </linearGradient>
                       </defs>
                     </svg>
                   </a>
-                  <a href="javascript:;" className="mr-6">
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      // Můžete zde přidat logiku, kterou chcete provést při kliknutí
+                    }}
+                    className="mr-6"
+                  >
                     <svg
                       width="31"
                       height="30"

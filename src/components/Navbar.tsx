@@ -1,12 +1,16 @@
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import logo from "../images/logo.png";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const navigation = [
+    { name: "Domů", id: "", color: "#FF1493", isExternal: true },
     { name: "O Nás", id: "about-us", color: "#FF0000" },
     { name: "Neony", id: "neony", color: "#00FF00" },
     { name: "Potisky", id: "potisky", color: "#FF4500" },
@@ -15,10 +19,26 @@ export default function Navbar() {
     { name: "Kontakt", id: "kontakt", color: "#FF69B4" },
   ];
 
-  const handleScroll = (id: string) => {
-    const section = document.getElementById(id);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
+  const handleScroll = async (id: string) => {
+    if (location.pathname !== "/") {
+      // Přesměrování na domovskou stránku
+      await navigate("/");
+
+      // Po přesměrování počkáme na renderování stránky
+      setTimeout(() => {
+        if (id) {
+          const section = document.getElementById(id);
+          if (section) {
+            section.scrollIntoView({ behavior: "smooth" });
+          }
+        }
+      }, 100);
+    } else if (id) {
+      // Scroll na sekci na aktuální stránce
+      const section = document.getElementById(id);
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -30,7 +50,13 @@ export default function Navbar() {
       >
         {/* Logo */}
         <div className="flex items-center">
-          <a className="-m-1.5 p-1.5">
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              handleScroll("");
+            }}
+            className="-m-1.5 p-1.5 cursor-pointer"
+          >
             <span className="sr-only">OAS-NEON</span>
             <img alt="/" src={logo} className="h-12 w-auto" />
           </a>
@@ -44,7 +70,7 @@ export default function Navbar() {
               onClick={(e) => {
                 e.preventDefault();
                 if (!item.isExternal) handleScroll(item.id);
-                else window.location.href = `/${item.id}`;
+                else navigate(`/${item.id}`);
               }}
               href={item.isExternal ? `/${item.id}` : `#${item.id}`}
               className="text-lg font-semibold text-white relative px-2 cursor-pointer"
@@ -66,7 +92,12 @@ export default function Navbar() {
             className="-m-2.5 inline-flex items-center rounded-md p-2.5 text-gray-200"
           >
             <span className="sr-only">Open main menu</span>
-            <Bars3Icon aria-hidden="true" className="h-6 w-6" />
+            <Bars3Icon
+              aria-hidden="true"
+              className="h-6 w-6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </button>
         </div>
       </nav>
@@ -80,7 +111,14 @@ export default function Navbar() {
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50" />
         <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 px-6 py-6 sm:max-w-xs sm:ring-1 sm:ring-gray-700">
           <div className="flex items-center justify-between">
-            <a href="#" className="-m-1.5 p-1.5">
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+                setMobileMenuOpen(false);
+                handleScroll("");
+              }}
+              className="-m-1.5 p-1.5 cursor-pointer"
+            >
               <span className="sr-only">OAS-NEON</span>
               <img alt="/" src={logo} className="h-10 w-auto" />
             </a>
@@ -90,7 +128,12 @@ export default function Navbar() {
               className="-m-2.5 rounded-md p-2.5 text-gray-200"
             >
               <span className="sr-only">Close menu</span>
-              <XMarkIcon aria-hidden="true" className="h-6 w-6" />
+              <XMarkIcon
+                aria-hidden="true"
+                className="h-6 w-6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </button>
           </div>
           <div className="mt-6 flow-root">

@@ -2,6 +2,12 @@ import Navbar from "./Navbar";
 import backgroundImage from "../images/bck.webp"; // Correct import path
 
 export default function Header() {
+  const handleScroll = (id: string) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <div className="relative h-screen text-white">
       <Navbar />
@@ -28,13 +34,19 @@ export default function Header() {
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <a
-                href="#kontakt"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleScroll("kontakt");
+                }}
                 className="rounded-md bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Kontaktujte nás
               </a>
               <a
-                href="#sluzby"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleScroll("about-us");
+                }}
                 className="text-sm font-semibold leading-6 text-indigo-400 hover:text-indigo-300"
               >
                 Zjistěte více <span aria-hidden="true">→</span>

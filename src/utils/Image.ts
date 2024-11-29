@@ -11,22 +11,17 @@ type ImageData = {
   category_name?: string; // Název kategorie připojený z tabulky `category`
 };
 
+const SUPABASE_URL = "https://bxwiyqyycdbhyrtqfbbf.supabase.co";
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ4d2l5cXl5Y2RiaHlydHFmYmJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIzOTU0NDEsImV4cCI6MjA0Nzk3MTQ0MX0.O2Iaf5TF_Bcndt7XRx4OzIVhb_XeJtZKWxCtHDggcH8";
+
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 export default class ImageManager {
-  private supabase;
+  private supabase = supabaseClient;
   private tableName = "images";
   private bucketName = "images"; // Název bucketu v Supabase Storage
 
-  constructor() {
-    const supabaseUrl = "https://bxwiyqyycdbhyrtqfbbf.supabase.co";
-    const supabaseAnonKey =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ4d2l5cXl5Y2RiaHlydHFmYmJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIzOTU0NDEsImV4cCI6MjA0Nzk3MTQ0MX0.O2Iaf5TF_Bcndt7XRx4OzIVhb_XeJtZKWxCtHDggcH8";
-
-    if (!supabaseUrl || !supabaseAnonKey) {
-      throw new Error("Supabase environment variables are not set!");
-    }
-
-    this.supabase = createClient(supabaseUrl, supabaseAnonKey);
-  }
   /**
    * Převod obrázku do formátu WebP
    */
@@ -100,23 +95,12 @@ export default class ImageManager {
         throw new Error("Unable to retrieve public URL for the uploaded file.");
       }
 
-      // Získání aktuálního max. pořadí obrázků
-      const { data: images, error: fetchError } = await this.supabase
-        .from(this.tableName)
-        .select("position")
-        .order("position", { ascending: false })
-        .limit(1);
-
-      if (fetchError) throw fetchError;
-
-      const maxPosition = images?.[0]?.position || 0;
-
       // Uložení cesty obrázku do databáze
       const { error } = await this.supabase.from(this.tableName).insert({
         file_path: publicUrl,
         file_name: webPFile.name,
         caption,
-        position: maxPosition + 1,
+        position: 1,
         category_id: categoryId,
       });
 
@@ -184,52 +168,23 @@ export default class ImageManager {
   }
 
   /**
-   * Smazání obrázku a aktualizace pozic zbývajících obrázků
-   */
-  public async removeImage(id: number): Promise<void> {
-    try {
-      const images = await this.getImages();
-
-      const image = images.find((img) => img.id === id);
-      if (!image) {
-        console.error("Image not found");
-        return;
-      }
-
-      // Posun pozic zbývajících obrázků
-      images.forEach((img) => {
-        if (img.position > image.position) {
-          img.position -= 1;
-        }
-      });
-
-      // Smazání obrázku z databáze
-      const { error: deleteError } = await this.supabase
-        .from(this.tableName)
-        .delete()
-        .eq("id", id);
-
-      if (deleteError) throw deleteError;
-
-      // Aktualizace zbývajících obrázků
-      for (const img of images) {
-        const { error } = await this.supabase
-          .from(this.tableName)
-          .update({ position: img.position })
-          .eq("id", img.id);
-
-        if (error) throw error;
-      }
-
-      console.log(`Image with ID: ${id} deleted successfully`);
-    } catch (error) {
-      console.error("Error removing image from Supabase:", error);
-    }
-  }
-
-  /**
    * Změna pořadí obrázků
    */
+  public async moveImage(
+    image_id: number,
+    new_position: number
+  ): Promise<void> {
+    try {
+      const { error } = await this.supabase.rpc("move_image", {
+        image_id: image_id,
+        new_position: new_position,
+      });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error("Error updating image order in Supabase:", error);
+    }
+  }
   public async changeOrder(id: number, newPosition: number): Promise<void> {
     try {
       const images = await this.getImages();
@@ -240,21 +195,15 @@ export default class ImageManager {
         return;
       }
 
-      // Přepočítání pozic
-      images.forEach((img) => {
-        if (img.position >= newPosition && img.position < image.position) {
-          img.position += 1;
-        } else if (
-          img.position <= newPosition &&
-          img.position > image.position
-        ) {
-          img.position -= 1;
-        }
+      const updatedList = [...images];
+      const [draggedImage] = updatedList.splice(image.position, 1);
+      updatedList.splice(newPosition, 0, draggedImage);
+
+      updatedList.forEach((img, index) => {
+        img.position = index + 1;
       });
 
-      image.position = newPosition;
-
-      for (const img of images) {
+      for (const img of updatedList) {
         const { error } = await this.supabase
           .from(this.tableName)
           .update({ position: img.position })

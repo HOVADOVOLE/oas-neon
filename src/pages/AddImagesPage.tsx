@@ -11,91 +11,76 @@ interface ImageItem {
   fileName: string;
   caption: string;
   position: number;
-  categoryId?: number; // Přidaná kategorie obrázku
+  categoryId?: number;
 }
 
 const AddImagesPage = () => {
-  const [selectedFiles, setSelectedFiles] = useState<
-    {
-      file: File;
-      categoryId?: number;
-    }[]
-  >([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [category, setCategory] = useState<number | null>(null);
   const [imageList, setImageList] = useState<ImageItem[]>([]);
   const manager = new ImageManager();
 
   const loadImages = async () => {
-    const images = (await manager.getImages()).map((img) => ({
-      id: img.id || 0,
-      filePath: img.filePath,
-      fileName: img.fileName,
-      caption: img.caption,
-      position: img.position,
-      categoryId: img.category_id,
-    }));
-    setImageList(images);
+    const images = await manager.getImages();
+    setImageList(images.sort((a, b) => a.position - b.position)); // Seřadíme podle pozice
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      const files = Array.from(event.target.files).map((file) => ({
-        file,
-        categoryId: undefined, // Defaultní kategorie zatím nevybraná
-      }));
+      const files = Array.from(event.target.files);
       setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
     }
   };
 
-  const handleCategoryChange = (index: number, categoryId: number) => {
-    setSelectedFiles((prevFiles) =>
-      prevFiles.map((file, i) => (i === index ? { ...file, categoryId } : file))
-    );
+  const handleCategoryChange = (categoryId: number) => {
+    setCategory(categoryId);
   };
 
   const handleSubmit = async () => {
     if (selectedFiles.length === 0) {
-      alert("Please select at least one file before submitting.");
+      alert("Vyberte alespoň jeden soubor před odesláním.");
+      return;
+    }
+    if (!category) {
+      alert("Vyberte kategorii pro všechny soubory.");
       return;
     }
 
     try {
-      for (const { file, categoryId } of selectedFiles) {
-        if (!categoryId) {
-          alert(`Please select a category for the file: ${file.name}`);
-          return;
-        }
-        await manager.addImage(file, "", categoryId); // Předáváme kategorii
+      for (const file of selectedFiles) {
+        await manager.addImage(file, "", category);
       }
-      alert("Files successfully uploaded!");
+      alert("Soubory byly úspěšně nahrány!");
       setSelectedFiles([]);
+      setCategory(null);
       loadImages();
     } catch (error) {
-      console.error("Error uploading images:", error);
-      alert("Failed to upload files.");
+      console.error("Chyba při nahrávání obrázků:", error);
+      alert("Nahrávání souborů se nezdařilo.");
     }
   };
 
-  const handleCaptionChange = async (id: number, caption: string) => {
-    await manager.updateCaption(id, caption);
-    loadImages();
+  const moveFile = (fromIndex: number, toIndex: number) => {
+    setSelectedFiles((prevFiles) => {
+      const updatedFiles = [...prevFiles];
+      const [movedFile] = updatedFiles.splice(fromIndex, 1);
+      updatedFiles.splice(toIndex, 0, movedFile);
+      return updatedFiles;
+    });
   };
 
-  const handleDeleteImage = async (id: number) => {
-    try {
-      await manager.removeImage(id);
-      loadImages();
-    } catch (error) {
-      console.error("Error deleting image:", error);
-      alert("Failed to delete image.");
-    }
-  };
+  const moveImage = (draggedIndex: number, targetIndex: number) => {
+    setImageList((prevList) => {
+      const updatedList = [...prevList];
+      const [movedImage] = updatedList.splice(draggedIndex, 1);
+      updatedList.splice(targetIndex, 0, movedImage);
 
-  const moveImage = async (id: number, newPosition: number) => {
-    const currentImage = imageList.find((img) => img.id === id);
-    if (!currentImage) return;
-
-    await manager.changeOrder(id, newPosition);
-    loadImages();
+      // Aktualizace pozic
+      return updatedList.map((image, index) => ({
+        ...image,
+        position: index + 1, // Upraví pořadí
+      }));
+    });
   };
 
   useEffect(() => {
@@ -104,60 +89,68 @@ const AddImagesPage = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="p-6 mx-auto bg-white rounded shadow-md max-w-screen-lg">
-        <h2 className="text-3xl font-bold mb-6 text-center">Upload Images</h2>
-        <div className="flex flex-col items-center gap-4">
+      <div className="py-12 bg-gray-900 text-white min-h-screen flex flex-col items-center w-full">
+        <h2 className="text-4xl font-bold mb-6 text-center neon-text">
+          Nahrát Obrázky
+        </h2>
+        <div className="w-4/5 flex flex-col items-center">
           <input
             type="file"
             multiple
             accept="image/*"
             onChange={handleFileChange}
-            className="mb-4 border rounded p-2 w-full max-w-md"
+            className="block w-full p-3 mb-4 bg-gray-800 text-gray-200 rounded-lg shadow-lg focus:outline-none focus:ring focus:ring-indigo-500"
           />
           {selectedFiles.length > 0 && (
-            <div className="mb-4">
-              <p className="font-medium text-center">Selected Files:</p>
-              <ul className="list-disc list-inside space-y-4">
-                {selectedFiles.map((item, index) => (
-                  <li key={index} className="flex flex-col gap-2">
-                    <span>{item.file.name}</span>
-                    <select
-                      value={item.categoryId || ""}
-                      onChange={(e) =>
-                        handleCategoryChange(index, Number(e.target.value))
-                      }
-                      className="border rounded p-2"
-                    >
-                      <option value="" disabled>
-                        Select Category
-                      </option>
-                      <option value={1}>Neony</option>
-                      <option value={2}>Potisky</option>
-                      <option value={3}>Polepy</option>
-                    </select>
-                  </li>
+            <div className="w-full mb-4">
+              <p className="font-medium text-center mb-2">
+                Přetáhněte pro změnu pořadí:
+              </p>
+              <div className="grid grid-cols-1 gap-3">
+                {selectedFiles.map((file, index) => (
+                  <DraggableFile
+                    key={index}
+                    file={file}
+                    index={index}
+                    moveFile={moveFile}
+                  />
                 ))}
-              </ul>
+              </div>
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-400 mb-2">
+                  Vyberte kategorii pro všechny soubory:
+                </label>
+                <select
+                  value={category || ""}
+                  onChange={(e) => handleCategoryChange(Number(e.target.value))}
+                  className="w-full p-3 bg-gray-800 text-white rounded-lg shadow-lg focus:outline-none focus:ring focus:ring-indigo-500"
+                >
+                  <option value="" disabled>
+                    Vyberte kategorii
+                  </option>
+                  <option value={1}>Neony</option>
+                  <option value={2}>Potisky</option>
+                  <option value={3}>Polepy</option>
+                </select>
+              </div>
             </div>
           )}
           <button
             onClick={handleSubmit}
-            className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="mt-4 px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-500 transition-all duration-500"
           >
-            Submit
+            Odeslat
           </button>
         </div>
 
         {imageList.length > 0 && (
-          <div className="mt-6 grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4 max-h-[70vh] overflow-y-auto p-4 bg-gray-100 rounded shadow-inner">
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-4/5">
             {imageList.map((image, index) => (
-              <ImageCard
+              <DraggableImageCard
                 key={image.id}
                 image={image}
                 index={index}
                 moveImage={moveImage}
-                onCaptionChange={handleCaptionChange}
-                onDelete={handleDeleteImage}
               />
             ))}
           </div>
@@ -167,34 +160,27 @@ const AddImagesPage = () => {
   );
 };
 
-interface ImageCardProps {
-  image: ImageItem;
+interface DraggableFileProps {
+  file: File;
   index: number;
-  moveImage: (id: number, newPosition: number) => void;
-  onCaptionChange: (id: number, caption: string) => void;
-  onDelete: (id: number) => void;
+  moveFile: (fromIndex: number, toIndex: number) => void;
 }
 
-const ImageCard: React.FC<ImageCardProps> = ({
-  image,
+const DraggableFile: React.FC<DraggableFileProps> = ({
+  file,
   index,
-  moveImage,
-  onCaptionChange,
-  onDelete,
+  moveFile,
 }) => {
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [, drag] = useDrag(() => ({
     type: ItemType,
-    item: { id: image.id, index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
+    item: { index },
   }));
 
   const [, drop] = useDrop(() => ({
     accept: ItemType,
-    hover: (draggedItem: { id: number; index: number }) => {
+    hover: (draggedItem: { index: number }) => {
       if (draggedItem.index !== index) {
-        moveImage(draggedItem.id, index + 1);
+        moveFile(draggedItem.index, index);
         draggedItem.index = index;
       }
     },
@@ -203,7 +189,47 @@ const ImageCard: React.FC<ImageCardProps> = ({
   return (
     <div
       ref={(node) => drag(drop(node))}
-      className={`relative flex flex-col items-center gap-2 p-3 bg-white shadow rounded ${
+      className="flex items-center justify-between p-2 border rounded bg-gray-800 text-white shadow hover:bg-gray-700 transition"
+    >
+      <span>{file.name}</span>
+      <span className="text-sm text-gray-400">Přetáhněte</span>
+    </div>
+  );
+};
+
+interface DraggableImageCardProps {
+  image: ImageItem;
+  index: number;
+  moveImage: (draggedIndex: number, targetIndex: number) => void;
+}
+
+const DraggableImageCard: React.FC<DraggableImageCardProps> = ({
+  image,
+  index,
+  moveImage,
+}) => {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: ItemType,
+    item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
+
+  const [, drop] = useDrop(() => ({
+    accept: ItemType,
+    hover: (draggedItem: { index: number }) => {
+      if (draggedItem.index !== index) {
+        moveImage(draggedItem.index, index);
+        draggedItem.index = index;
+      }
+    },
+  }));
+
+  return (
+    <div
+      ref={(node) => drag(drop(node))}
+      className={`relative flex flex-col items-center gap-2 p-3 bg-gray-800 text-white shadow rounded cursor-move transition-transform ${
         isDragging ? "opacity-50" : "opacity-100"
       }`}
     >
@@ -214,17 +240,13 @@ const ImageCard: React.FC<ImageCardProps> = ({
       />
       <input
         type="text"
-        className="text-sm p-2 border rounded w-full"
+        className="text-sm p-2 bg-gray-700 text-white rounded w-full"
         value={image.caption}
-        onChange={(e) => onCaptionChange(image.id, e.target.value)}
-        placeholder="Add a caption..."
+        onChange={(e) =>
+          console.log(`Caption for ${image.id}:`, e.target.value)
+        }
+        placeholder="Přidejte popis..."
       />
-      <button
-        onClick={() => onDelete(image.id)}
-        className="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-      >
-        Delete
-      </button>
     </div>
   );
 };

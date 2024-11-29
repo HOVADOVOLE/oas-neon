@@ -1,42 +1,113 @@
+import React, { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import logo from "../images/logo.png";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 const LoginPage = () => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const validateForm = (values: { username: string; password: string }) => {
+    const errors: { username?: string; password?: string } = {};
+    if (!values.username) {
+      errors.username = "Username is required";
+    }
+    if (!values.password) {
+      errors.password = "Password is required";
+    }
+    return errors;
+  };
+
+  const handleSubmit = (
+    values: { username: string; password: string },
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+  ) => {
+    const storedUsername = "niger";
+    const storedPassword = "niger";
+
+    if (
+      values.username === storedUsername &&
+      values.password === storedPassword
+    ) {
+      console.log("Uživatel přihlášen");
+      login(); // Zavolá funkci login z AuthContext
+      setErrorMessage(null);
+      navigate("/upload");
+    } else {
+      setErrorMessage("Přihlašovací údaje nejsou správné");
+    }
+
+    setSubmitting(false);
+  };
+
   return (
-    <section className="flex justify-center relative">
+    <section className="relative flex items-center justify-center min-h-screen bg-gray-900 text-white">
       <img
         src="https://pagedone.io/asset/uploads/1702362010.png"
-        alt="gradient background image"
-        className="w-full h-full object-cover fixed"
+        alt="Gradient background image"
+        className="absolute inset-0 w-full h-full object-cover -z-10"
       />
-      <div className="mx-auto max-w-lg px-6 lg:px-8 absolute py-20">
+      <div className="relative max-w-md w-full p-6 lg:p-8 bg-gray-800 rounded-3xl shadow-lg">
         <img
-          src="https://pagedone.io/asset/uploads/1702362108.png"
-          alt="pagedone logo"
-          className="mx-auto lg:mb-11 mb-8 object-cover"
+          src={logo}
+          alt="OAS-NEON logo"
+          className="w-24 h-24 mx-auto mb-8 object-contain"
         />
-        <div className="rounded-2xl bg-white shadow-xl">
-          <form action="" className="lg:p-11 p-7 mx-auto">
-            <div className="mb-11">
-              <h1 className="text-gray-900 text-center font-manrope text-3xl font-bold leading-10 mb-2">
-                Welcome Back
-              </h1>
-              <p className="text-gray-500 text-center text-base font-medium leading-6">
-                Let’s get started with your 30 days free trail
-              </p>
-            </div>
-            <input
-              type="text"
-              className="w-full h-12 text-gray-900 placeholder:text-gray-400 text-lg font-normal leading-7 rounded-full border-gray-300 border shadow-sm focus:outline-none px-4 mb-6"
-              placeholder="Username"
-            />
-            <input
-              type="password"
-              className="w-full h-12 text-gray-900 placeholder:text-gray-400 text-lg font-normal leading-7 rounded-full border-gray-300 border shadow-sm focus:outline-none px-4 mb-8"
-              placeholder="Password"
-            />
-            <button className=" w-full h-12 text-white text-center text-base font-semibold leading-6 rounded-full hover:bg-indigo-800 transition-all duration-700 bg-indigo-600 shadow-sm mb-6">
-              Login
-            </button>
-          </form>
-        </div>
+        <Formik
+          initialValues={{ username: "", password: "" }}
+          validate={validateForm}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting }) => (
+            <Form className="space-y-6">
+              <div className="text-center">
+                <h1 className="text-3xl font-bold text-white neon-text mb-4">
+                  Vítejte zpět
+                </h1>
+                {errorMessage && (
+                  <p className="text-red-500 text-sm">{errorMessage}</p>
+                )}
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <Field
+                    type="text"
+                    name="username"
+                    placeholder="Uživatelské jméno"
+                    className="w-full h-12 px-4 text-lg text-gray-200 rounded-full bg-gray-700 placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <ErrorMessage
+                    name="username"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
+                <div>
+                  <Field
+                    type="password"
+                    name="password"
+                    placeholder="Heslo"
+                    className="w-full h-12 px-4 text-lg text-gray-200 rounded-full bg-gray-700 placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full h-12 bg-indigo-600 text-white font-semibold rounded-full shadow-md hover:bg-indigo-700 transition-all"
+              >
+                Přihlásit se
+              </button>
+            </Form>
+          )}
+        </Formik>
       </div>
     </section>
   );

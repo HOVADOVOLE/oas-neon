@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import logo from "../images/logo.png";
+import logo from "../images/logo.webp";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -45,7 +45,7 @@ const LoginPage = () => {
   return (
     <section className="relative flex items-center justify-center min-h-screen bg-gray-900 text-white">
       <img
-        src="https://pagedone.io/asset/uploads/1702362010.png"
+        //src="https://pagedone.io/asset/uploads/1702362010.png"
         alt="Gradient background image"
         className="absolute inset-0 w-full h-full object-cover -z-10"
       />

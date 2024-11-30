@@ -1,6 +1,6 @@
-import neony from "../images/neony.jpg";
-import potisky from "../images/potisky.jpg";
-import samolepky from "../images/samolepky.png";
+import neony from "../images/neony.webp";
+import potisky from "../images/potisky.webp";
+import samolepky from "../images/samolepky.webp";
 
 interface WorkProps {
   index: number;

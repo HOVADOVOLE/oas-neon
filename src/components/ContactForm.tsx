@@ -31,7 +31,7 @@ export default function ContactForm() {
               </form>
             </div>
           </div>
-          <div className="lg:max-w-xl w-full h-[600px] flex items-center justify-center  bg-cover bg-no-repeat bg-[url('https://pagedone.io/asset/uploads/1696245837.png')] ">
+          <div className="lg:max-w-xl w-full h-[600px] flex items-center justify-center  bg-cover bg-no-repeat bg-black ">
             <div className="">
               <div className="lg:w-96 w-auto h-auto bg-white shadow-xl lg:p-6 p-4">
                 <svg

@@ -8,6 +8,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import ImageManager from "../utils/Image";
+import Navbar from "../components/Navbar";
 
 interface ImageItem {
   id: number;
@@ -159,6 +160,7 @@ const AddImagesPage = () => {
 
   return (
     <div className="py-12 bg-gray-900 text-white min-h-screen flex flex-col items-center w-full">
+      <Navbar />
       <h2 className="text-4xl font-bold mb-6 text-center">Správa Obrázků</h2>
       <div className="w-4/5 flex flex-col items-center">
         {/* Nahrávání souborů */}

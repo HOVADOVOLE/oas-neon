@@ -1,6 +1,6 @@
 import Work from "./Work";
 import ContactForm from "./ContactForm";
-import aboutUsImage from "../images/aboutus.png";
+import aboutUsImage from "../images/aboutus.webp";
 
 export default function AboutUs() {
   return (

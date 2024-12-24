@@ -4,6 +4,7 @@ import "react-image-lightbox/style.css";
 import ImageManager from "../utils/Image";
 import Navbar from "./Navbar";
 import ErrorBoundary from "./ErrorBoundary";
+import Footer from "./Footer";
 
 interface ImageList {
   id: number;
@@ -91,15 +92,23 @@ const ImageGallery: React.FC = () => {
         </div>
       ) : (
         <div className="w-100 flex flex-col items-center mt-14">
-          <h1 className="text-6xl font-bold text-center mb-8 neon-text">
+          <h1
+            className="text-6xl font-bold text-center mb-8"
+            style={{
+              textShadow:
+                "0 0 20px rgba(255, 0, 0, 0.8), 0 0 30px rgba(255, 0, 0, 0.6), 0 0 40px rgba(255, 0, 0, 0.4)",
+              color: "#ff0000",
+            }}
+          >
             Galerie
           </h1>
-          <div className="text-center mb-8 w-4/5">
+
+          <div className="text-left mb-8 w-4/5">
             <select
               id="category"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="py-2 px-4 bg-gray-800 text-white rounded-lg shadow-lg float-left"
+              className="py-3 px-4 bg-gray-800 text-white rounded-lg shadow-lg w-full sm:w-1/2 md:w-1/4 lg:w-1/5 xl:w-1/6 transition-all"
             >
               <option value="all">Všechny</option>
               <option value="1">Neony</option>
@@ -112,15 +121,24 @@ const ImageGallery: React.FC = () => {
             {filteredImages.map((image, index) => (
               <div
                 key={image.id}
-                className="cursor-pointer"
+                className="relative group cursor-pointer"
                 onClick={() => handleOpenLightbox(index)}
               >
+                {/* Obrázek */}
                 <img
                   src={image.filePath}
                   alt={image.caption}
                   className="object-cover w-full h-full rounded-lg shadow-lg"
                   loading="lazy"
                 />
+                {/* Overlay s textem */}
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  {image.caption && (
+                    <p className="text-white text-center font-semibold px-4 text-3xl">
+                      {image.caption}
+                    </p>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -130,7 +148,9 @@ const ImageGallery: React.FC = () => {
               <>
                 {isImageLoading && (
                   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
-                    <div className="text-white text-xl">Načítám obrázek...</div>
+                    <div className="text-white text-xl ">
+                      Načítám obrázek...
+                    </div>
                   </div>
                 )}
                 <Lightbox
@@ -156,6 +176,9 @@ const ImageGallery: React.FC = () => {
           </ErrorBoundary>
         </div>
       )}
+      <div className="w-full mt-10">
+        <Footer />
+      </div>
     </div>
   );
 };

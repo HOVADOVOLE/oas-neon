@@ -10,6 +10,8 @@ import { CSS } from "@dnd-kit/utilities";
 import ImageManager from "../utils/Image";
 import Navbar from "../components/Navbar";
 import { toast } from "react-toastify";
+import UploadPopup from "../components/UploadPopup";
+import Footer from "../components/Footer";
 
 interface ImageItem {
   id: number;
@@ -21,56 +23,18 @@ interface ImageItem {
 }
 
 const AddImagesPage = () => {
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [category, setCategory] = useState<number | null>(null);
   const [filterCategory, setFilterCategory] = useState<number | null>(null);
   const [imageList, setImageList] = useState<ImageItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(
     null
   );
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const captionTimers = useRef<{ [id: number]: NodeJS.Timeout }>({});
   const manager = new ImageManager();
 
   const loadImages = async () => {
     const images = await manager.getImages();
     setImageList(images.sort((a, b) => a.position - b.position));
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const files = Array.from(event.target.files);
-      setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
-    }
-  };
-
-  const handleSubmit = async () => {
-    if (selectedFiles.length === 0) {
-      toast.warning("Vyberte alespoň jeden soubor před odesláním.");
-      return;
-    }
-    if (!category) {
-      toast.warning("Vyberte kategorii pro všechny soubory.");
-      //alert("Vyberte kategorii pro všechny soubory.");
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      for (const file of selectedFiles) {
-        await manager.addImage(file, "", category);
-      }
-      toast.success("Soubory byly úspěšně nahrány!");
-      setSelectedFiles([]);
-      setCategory(null);
-      loadImages();
-    } catch (error) {
-      console.error("Chyba při nahrávání obrázků:", error);
-      toast.error("Nahrávání souborů se nezdařilo.");
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const handleCaptionChange = (imageId: number, newCaption: string) => {
@@ -182,12 +146,6 @@ const AddImagesPage = () => {
 
   return (
     <div className="py-12 bg-gray-900 text-white min-h-screen flex flex-col items-center w-full">
-      {isLoading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-          <div className="loader border-t-4 border-b-4 border-indigo-500 rounded-full w-12 h-12 animate-spin"></div>
-        </div>
-      )}
-
       {showDeleteConfirm && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90 z-50">
           <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg w-96">
@@ -215,40 +173,27 @@ const AddImagesPage = () => {
 
       <Navbar />
 
-      <div className="w-4/5 flex flex-col items-center mt-10">
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleFileChange}
-          className="block w-full p-3 mb-4 bg-gray-800 text-gray-200 rounded-lg shadow-lg focus:outline-none focus:ring focus:ring-indigo-500"
-        />
-        <select
-          value={category || ""}
-          onChange={(e) =>
-            setCategory(e.target.value ? Number(e.target.value) : null)
-          }
-          className="block w-full p-3 mb-4 bg-gray-800 text-gray-200 rounded-lg shadow-lg focus:outline-none focus:ring focus:ring-indigo-500"
-        >
-          <option value="">Vyberte kategorii</option>
-          <option value={1}>Neony</option>
-          <option value={2}>Potisky</option>
-          <option value={3}>Polepy</option>
-        </select>
+      <div className="w-4/5 flex flex-col items-end mt-10">
         <button
-          onClick={handleSubmit}
-          className="px-6 py-2 mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md focus:outline-none"
+          onClick={() => setIsPopupOpen(true)}
+          className="px-6 py-2 mb-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md focus:outline-none"
         >
           Nahrát Obrázky
         </button>
+        {isPopupOpen && (
+          <UploadPopup
+            onClose={() => setIsPopupOpen(false)}
+            onUploadComplete={loadImages}
+          />
+        )}
 
-        <div className="w-1/4 my-6 float-left">
+        <div className="w-full my-6 text-left">
           <select
             value={filterCategory || ""}
             onChange={(e) =>
               setFilterCategory(e.target.value ? Number(e.target.value) : null)
             }
-            className="w-full p-3 bg-gray-800 text-white rounded-lg shadow-lg focus:outline-none focus:ring focus:ring-indigo-500"
+            className="py-3 px-4 bg-gray-800 text-white rounded-lg shadow-lg w-full sm:w-1/2 md:w-1/4 lg:w-1/5 xl:w-1/6 transition-all focus:outline-none focus:ring-2 focus:ring-red-500"
           >
             <option value="">Všechny</option>
             <option value={1}>Neony</option>
@@ -287,14 +232,14 @@ const AddImagesPage = () => {
                       handleCaptionChange(image.id, e.target.value)
                     }
                     placeholder="Přidejte popis..."
-                    className="w-full p-2 bg-gray-700 text-white rounded focus:outline-none focus:ring focus:ring-indigo-500"
+                    className="w-full p-2 bg-gray-700 text-white rounded"
                   />
                   <select
                     value={image.category_id}
                     onChange={(e) =>
                       handleCategoryChange(image.id, Number(e.target.value))
                     }
-                    className="w-full p-2 bg-gray-700 text-white rounded focus:outline-none focus:ring focus:ring-indigo-500"
+                    className="w-full p-2 bg-gray-700 text-white rounded"
                   >
                     <option value={1}>Neony</option>
                     <option value={2}>Potisky</option>
@@ -306,6 +251,7 @@ const AddImagesPage = () => {
           </div>
         </SortableContext>
       </DndContext>
+      <Footer />
     </div>
   );
 };

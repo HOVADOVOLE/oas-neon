@@ -134,7 +134,7 @@ const ImageGallery: React.FC = () => {
                 {/* Overlay s textem */}
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   {image.caption && (
-                    <p className="text-white text-center font-semibold px-4 text-3xl">
+                    <p className="text-white text-center font-semibold px-4 text-xl">
                       {image.caption}
                     </p>
                   )}

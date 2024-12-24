@@ -12,7 +12,7 @@ export default function AboutUs() {
             <div className="rounded-xl overflow-hidden shadow-lg">
               <img
                 className="object-cover w-full"
-                src={aboutUsImage} // Use the imported image
+                src={aboutUsImage}
                 alt="About Us"
               />
             </div>

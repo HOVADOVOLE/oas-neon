@@ -67,7 +67,9 @@ export default function Work(props: WorkProps) {
           {text}
         </p>
         <button
-          onClick={() => (window.location.href = link)}
+          onClick={() =>
+            (window.location.href = `${link}?category=${texts[index].id}`)
+          }
           className="px-6 py-3 bg-indigo-600 hover:bg-indigo-800 rounded-lg shadow-lg text-white font-medium text-lg transition-all duration-500 text-justify"
         >
           Zjistí více

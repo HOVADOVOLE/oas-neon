@@ -15,7 +15,6 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
   const [category, setCategory] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const manager = new ImageManager();
-  let errorFiles = 0;
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -37,17 +36,8 @@ const UploadPopup: React.FC<UploadPopupProps> = ({
     setIsLoading(true);
 
     try {
-      errorFiles = 0;
       for (const file of selectedFiles) {
-        await manager.addImage(file, "", category).catch((error) => {
-          toast.error(
-            `Chyba při nahrávání souboru ${file.name}: ${error.message}`
-          );
-          errorFiles++;
-        });
-      }
-      if (errorFiles === 0) {
-        toast.success("Obrázky byly úspěšně nahrány.");
+        await manager.addImage(file, "", category);
       }
       setSelectedFiles([]);
       setCategory(null);

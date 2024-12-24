@@ -22,19 +22,28 @@ interface ImageItem {
   category_id: number;
 }
 
-const AddImagesPage = () => {
+const AddImagesPage: React.FC = () => {
   const [filterCategory, setFilterCategory] = useState<number | null>(null);
   const [imageList, setImageList] = useState<ImageItem[]>([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(
     null
   );
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const captionTimers = useRef<{ [id: number]: NodeJS.Timeout }>({});
-  const manager = new ImageManager();
+  const manager = useRef(new ImageManager());
 
   const loadImages = async () => {
-    const images = await manager.getImages();
-    setImageList(images.sort((a, b) => a.position - b.position));
+    setLoading(true);
+    try {
+      const images = await manager.current.getImages();
+      setImageList(images.sort((a, b) => a.position - b.position));
+    } catch (error) {
+      console.error("Error loading images:", error);
+      toast.error("Nepodařilo se načíst obrázky.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCaptionChange = (imageId: number, newCaption: string) => {
@@ -50,10 +59,11 @@ const AddImagesPage = () => {
 
     captionTimers.current[imageId] = setTimeout(async () => {
       try {
-        await manager.updateCaption(imageId, newCaption);
-        console.log(`Caption for image ${imageId} updated successfully.`);
+        await manager.current.updateCaption(imageId, newCaption);
+        toast.success("Popisek byl úspěšně aktualizován.");
       } catch (error) {
         console.error("Error updating caption:", error);
+        toast.error("Aktualizace popisku selhala.");
       }
     }, 3000);
   };
@@ -68,7 +78,7 @@ const AddImagesPage = () => {
 
   const handleDeleteImage = async (imageId: number) => {
     try {
-      await manager.deleteImage(imageId);
+      await manager.current.deleteImage(imageId);
       setImageList((prevImages) =>
         prevImages.filter((image) => image.id !== imageId)
       );
@@ -93,14 +103,11 @@ const AddImagesPage = () => {
 
     try {
       const movedImage = reorderedList[newIndex];
-      await manager.moveImage(movedImage.id, newIndex + 1);
-      console.log(
-        `Image ID ${movedImage.id} moved to position ${
-          newIndex + 1
-        } successfully.`
-      );
+      await manager.current.moveImage(movedImage.id, newIndex + 1);
+      toast.success(`Obrázek přesunut na pozici ${newIndex + 1}.`);
     } catch (error) {
       console.error("Chyba při ukládání nové pozice:", error);
+      toast.error("Uložení nové pozice selhalo.");
     }
   };
 
@@ -117,7 +124,7 @@ const AddImagesPage = () => {
     ? imageList.filter((image) => image.category_id === filterCategory)
     : imageList;
 
-  const SortableItem = ({ image }: { image: ImageItem }) => {
+  const SortableItem: React.FC<{ image: ImageItem }> = ({ image }) => {
     const { attributes, listeners, setNodeRef, transform, transition } =
       useSortable({ id: image.id });
 
@@ -172,86 +179,93 @@ const AddImagesPage = () => {
       )}
 
       <Navbar />
-
-      <div className="w-4/5 flex flex-col items-end mt-10">
-        <button
-          onClick={() => setIsPopupOpen(true)}
-          className="px-6 py-2 mb-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md focus:outline-none"
-        >
-          Nahrát Obrázky
-        </button>
-        {isPopupOpen && (
-          <UploadPopup
-            onClose={() => setIsPopupOpen(false)}
-            onUploadComplete={loadImages}
-          />
-        )}
-
-        <div className="w-full my-6 text-left">
-          <select
-            value={filterCategory || ""}
-            onChange={(e) =>
-              setFilterCategory(e.target.value ? Number(e.target.value) : null)
-            }
-            className="py-3 px-4 bg-gray-800 text-white rounded-lg shadow-lg w-full sm:w-1/2 md:w-1/4 lg:w-1/5 xl:w-1/6 transition-all focus:outline-none focus:ring-2 focus:ring-red-500"
-          >
-            <option value="">Všechny</option>
-            <option value={1}>Neony</option>
-            <option value={2}>Potisky</option>
-            <option value={3}>Polepy</option>
-          </select>
+      {loading ? (
+        <div className="flex items-center justify-center h-screen">
+          <div className="loader border-t-4 border-b-4 border-indigo-500 rounded-full w-12 h-12 animate-spin"></div>
         </div>
-      </div>
+      ) : (
+        <>
+          <div className="w-4/5 flex flex-wrap items-center justify-between my-8 gap-4 sm:gap-0">
+            <select
+              value={filterCategory || ""}
+              onChange={(e) =>
+                setFilterCategory(
+                  e.target.value ? Number(e.target.value) : null
+                )
+              }
+              className="py-3 px-4 bg-gray-800 text-white rounded-lg shadow-lg w-full sm:w-1/2 md:w-1/4 lg:w-1/5 xl:w-1/6 transition-all focus:outline-none focus:ring-2 focus:ring-red-500"
+            >
+              <option value="">Všechny</option>
+              <option value={1}>Neony</option>
+              <option value={2}>Potisky</option>
+              <option value={3}>Polepy</option>
+            </select>
 
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext
-          items={filteredImages.map((image) => image.id.toString())}
-          strategy={verticalListSortingStrategy}
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-4/5">
-            {filteredImages.map((image) => (
-              <div
-                key={image.id}
-                className="relative flex flex-col gap-3 bg-gray-800 p-4 shadow-lg rounded-lg"
-              >
-                <SortableItem image={image} />
-                <button
-                  className="absolute top-2 right-2 bg-red-500 text-black rounded-full w-6 h-6 flex items-center justify-center shadow-lg"
-                  onClick={() => {
-                    setShowDeleteConfirm(image.id);
-                    console.log("Delete button clicked for image ID", image.id);
-                  }}
-                >
-                  ×
-                </button>
-                <div className="flex flex-col gap-2 mt-2">
-                  <input
-                    type="text"
-                    value={image.caption}
-                    onChange={(e) =>
-                      handleCaptionChange(image.id, e.target.value)
-                    }
-                    placeholder="Přidejte popis..."
-                    className="w-full p-2 bg-gray-700 text-white rounded"
-                  />
-                  <select
-                    value={image.category_id}
-                    onChange={(e) =>
-                      handleCategoryChange(image.id, Number(e.target.value))
-                    }
-                    className="w-full p-2 bg-gray-700 text-white rounded"
-                  >
-                    <option value={1}>Neony</option>
-                    <option value={2}>Potisky</option>
-                    <option value={3}>Polepy</option>
-                  </select>
-                </div>
-              </div>
-            ))}
+            <button
+              onClick={() => setIsPopupOpen(true)}
+              className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md focus:outline-none sm:ml-auto w-full sm:w-1/3 md:w-1/3 lg:w-1/5 xl:w-1/12"
+            >
+              Nahrát Obrázky
+            </button>
+            {isPopupOpen && (
+              <UploadPopup
+                onClose={() => setIsPopupOpen(false)}
+                onUploadComplete={loadImages}
+              />
+            )}
           </div>
-        </SortableContext>
-      </DndContext>
-      <Footer />
+
+          <DndContext
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={filteredImages.map((image) => image.id.toString())}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-4/5">
+                {filteredImages.map((image) => (
+                  <div
+                    key={image.id}
+                    className="relative flex flex-col gap-3 bg-gray-800 p-4 shadow-lg rounded-lg"
+                  >
+                    <SortableItem image={image} />
+                    <button
+                      className="absolute top-2 right-2 bg-red-500 text-black rounded-full w-6 h-6 flex items-center justify-center shadow-lg"
+                      onClick={() => setShowDeleteConfirm(image.id)}
+                    >
+                      ×
+                    </button>
+                    <div className="flex flex-col gap-2 mt-2">
+                      <input
+                        type="text"
+                        value={image.caption}
+                        onChange={(e) =>
+                          handleCaptionChange(image.id, e.target.value)
+                        }
+                        placeholder="Přidejte popis..."
+                        className="w-full p-2 bg-gray-700 text-white rounded"
+                      />
+                      <select
+                        value={image.category_id}
+                        onChange={(e) =>
+                          handleCategoryChange(image.id, Number(e.target.value))
+                        }
+                        className="w-full p-2 bg-gray-700 text-white rounded"
+                      >
+                        <option value={1}>Neony</option>
+                        <option value={2}>Potisky</option>
+                        <option value={3}>Polepy</option>
+                      </select>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+          <Footer />
+        </>
+      )}
     </div>
   );
 };

@@ -115,6 +115,7 @@ export default function ContactForm() {
                     // Můžete zde přidat logiku, kterou chcete provést při kliknutí
                   }}
                   className="flex items-center mb-6"
+                  aria-label="Telefon"
                 >
                   <svg
                     width="30"
@@ -141,6 +142,7 @@ export default function ContactForm() {
                     // Můžete zde přidat logiku, kterou chcete provést při kliknutí
                   }}
                   className="flex items-center mb-6"
+                  aria-label="Email"
                 >
                   <svg
                     width="30"
@@ -167,6 +169,7 @@ export default function ContactForm() {
                       e.preventDefault();
                     }}
                     className="mr-6"
+                    aria-label="Facebook"
                   >
                     <svg
                       width="31"
@@ -194,6 +197,7 @@ export default function ContactForm() {
                       // Můžete zde přidat logiku, kterou chcete provést při kliknutí
                     }}
                     className="mr-6"
+                    aria-label="Facebook"
                   >
                     <svg
                       width="31"
@@ -238,6 +242,7 @@ export default function ContactForm() {
                       // Můžete zde přidat logiku, kterou chcete provést při kliknutí
                     }}
                     className="mr-6"
+                    aria-label="Facebook"
                   >
                     <svg
                       width="31"

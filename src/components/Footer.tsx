@@ -22,22 +22,38 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="#home" className="hover:text-indigo-400">
+                <a
+                  href="#home"
+                  className="hover:text-indigo-400"
+                  aria-label="Domů"
+                >
                   Domů
                 </a>
               </li>
               <li>
-                <a href="#services" className="hover:text-indigo-400">
+                <a
+                  href="#services"
+                  className="hover:text-indigo-400"
+                  aria-label="Naše služby"
+                >
                   Služby
                 </a>
               </li>
               <li>
-                <a href="#portfolio" className="hover:text-indigo-400">
-                  Portfolio
+                <a
+                  href="#galerie"
+                  className="hover:text-indigo-400"
+                  aria-label="Naše galerie"
+                >
+                  Galerie
                 </a>
               </li>
               <li>
-                <a href="#contact" className="hover:text-indigo-400">
+                <a
+                  href="#contact"
+                  className="hover:text-indigo-400"
+                  aria-label="Kontaktujte nás"
+                >
                   Kontakt
                 </a>
               </li>
@@ -88,6 +104,7 @@ export default function Footer() {
               <a
                 href="#"
                 className="p-3 bg-gray-800 rounded-full hover:bg-indigo-500 transition"
+                aria-label="Facebook"
               >
                 <svg
                   className="w-5 h-5 text-white"
@@ -101,6 +118,7 @@ export default function Footer() {
               <a
                 href="#"
                 className="p-3 bg-gray-800 rounded-full hover:bg-indigo-500 transition"
+                aria-label="Instagram"
               >
                 <svg
                   className="w-5 h-5 text-white"

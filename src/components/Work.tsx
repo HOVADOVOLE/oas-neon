@@ -82,7 +82,7 @@ export default function Work(props: WorkProps) {
       className="py-12 relative mt-8 bg-gray-900"
     >
       <div
-        className="w-full max-w-7xl px-4 md:px-5 lg:px-5 mx-auto bg-gradient-to-br from-gray-900 to-gray-950 rounded-3xl"
+        className="w-full max-w-7xl px-4 md:px-5 lg:px-5 mx-auto bg-gradient-to-b from-transparent to-[#0307126c] rounded-3xl"
         style={{
           borderRadius: "1.5rem", // Zaoblení rohů
           boxShadow:

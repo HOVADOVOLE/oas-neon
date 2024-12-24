@@ -186,4 +186,41 @@ export default class ImageManager {
       console.error("Error updating image order in Supabase:", error);
     }
   }
+  public async deleteImage(imageId: number): Promise<void> {
+    try {
+      // Načtení cesty k souboru
+      const { data, error } = await this.supabase
+        .from(this.tableName)
+        .select("file_path")
+        .eq("id", imageId)
+        .single();
+
+      if (error) throw error;
+
+      const filePath = data?.file_path.split("/").pop();
+      if (!filePath) {
+        throw new Error("Cesta k souboru nenalezena.");
+      }
+
+      // Smazání souboru ze Supabase Storage
+      const { error: deleteError } = await this.supabase.storage
+        .from(this.bucketName)
+        .remove([filePath]);
+
+      if (deleteError) throw deleteError;
+
+      // Smazání záznamu z databáze
+      const { error: dbError } = await this.supabase
+        .from(this.tableName)
+        .delete()
+        .eq("id", imageId);
+
+      if (dbError) throw dbError;
+
+      console.log(`Obrázek s ID ${imageId} byl úspěšně smazán.`);
+    } catch (error) {
+      console.error("Chyba při mazání obrázku:", error);
+      throw error;
+    }
+  }
 }

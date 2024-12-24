@@ -20,6 +20,7 @@ const ImageGallery: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [isImageLoading, setIsImageLoading] = useState<boolean>(true);
+  const [isGalleryLoading, setIsGalleryLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const loadImages = async () => {
@@ -30,6 +31,7 @@ const ImageGallery: React.FC = () => {
         setAllImages(images);
         setFilteredImages(images);
       }
+      setIsGalleryLoading(false); // Skryje spinner po načtení všech obrázků
     };
 
     loadImages();
@@ -83,71 +85,77 @@ const ImageGallery: React.FC = () => {
   return (
     <div className="py-12 bg-gray-900 text-white min-h-screen flex flex-col items-center w-full">
       <Navbar />
-      <div className="w-100 flex flex-col items-center mt-14">
-        <h1 className="text-6xl font-bold text-center mb-8 neon-text">
-          Galerie
-        </h1>
-        <div className="text-center mb-8 w-4/5">
-          <select
-            id="category"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="py-2 px-4 bg-gray-800 text-white rounded-lg shadow-lg float-left"
-          >
-            <option value="all">Všechny</option>
-            <option value="1">Neony</option>
-            <option value="2">Potisky</option>
-            <option value="3">Polepy</option>
-          </select>
+      {isGalleryLoading ? (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900">
+          <div className="text-white text-xl">Načítám galerii...</div>
         </div>
-
-        <div className="w-4/5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {filteredImages.map((image, index) => (
-            <div
-              key={image.id}
-              className="cursor-pointer"
-              onClick={() => handleOpenLightbox(index)}
+      ) : (
+        <div className="w-100 flex flex-col items-center mt-14">
+          <h1 className="text-6xl font-bold text-center mb-8 neon-text">
+            Galerie
+          </h1>
+          <div className="text-center mb-8 w-4/5">
+            <select
+              id="category"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="py-2 px-4 bg-gray-800 text-white rounded-lg shadow-lg float-left"
             >
-              <img
-                src={image.filePath}
-                alt={image.caption}
-                className="object-cover w-full h-full rounded-lg shadow-lg"
-                loading="lazy"
-              />
-            </div>
-          ))}
-        </div>
+              <option value="all">Všechny</option>
+              <option value="1">Neony</option>
+              <option value="2">Potisky</option>
+              <option value="3">Polepy</option>
+            </select>
+          </div>
 
-        <ErrorBoundary>
-          {currentIndex !== null && filteredImages[currentIndex] && (
-            <>
-              {isImageLoading && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
-                  <div className="text-white text-xl">Načítám obrázek...</div>
-                </div>
-              )}
-              <Lightbox
-                mainSrc={filteredImages[currentIndex].filePath}
-                nextSrc={
-                  filteredImages[(currentIndex + 1) % filteredImages.length]
-                    .filePath
-                }
-                prevSrc={
-                  filteredImages[
-                    (currentIndex + filteredImages.length - 1) %
-                      filteredImages.length
-                  ].filePath
-                }
-                onCloseRequest={handleCloseLightbox}
-                onMovePrevRequest={handleMovePrev}
-                onMoveNextRequest={handleMoveNext}
-                imageCaption={filteredImages[currentIndex].caption || ""}
-                onImageLoad={handleImageLoad} // Zavoláno, jakmile obrázek je načten
-              />
-            </>
-          )}
-        </ErrorBoundary>
-      </div>
+          <div className="w-4/5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {filteredImages.map((image, index) => (
+              <div
+                key={image.id}
+                className="cursor-pointer"
+                onClick={() => handleOpenLightbox(index)}
+              >
+                <img
+                  src={image.filePath}
+                  alt={image.caption}
+                  className="object-cover w-full h-full rounded-lg shadow-lg"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+
+          <ErrorBoundary>
+            {currentIndex !== null && filteredImages[currentIndex] && (
+              <>
+                {isImageLoading && (
+                  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+                    <div className="text-white text-xl">Načítám obrázek...</div>
+                  </div>
+                )}
+                <Lightbox
+                  mainSrc={filteredImages[currentIndex].filePath}
+                  nextSrc={
+                    filteredImages[(currentIndex + 1) % filteredImages.length]
+                      .filePath
+                  }
+                  prevSrc={
+                    filteredImages[
+                      (currentIndex + filteredImages.length - 1) %
+                        filteredImages.length
+                    ].filePath
+                  }
+                  onCloseRequest={handleCloseLightbox}
+                  onMovePrevRequest={handleMovePrev}
+                  onMoveNextRequest={handleMoveNext}
+                  imageCaption={filteredImages[currentIndex].caption || ""}
+                  onImageLoad={handleImageLoad} // Zavoláno, jakmile obrázek je načten
+                />
+              </>
+            )}
+          </ErrorBoundary>
+        </div>
+      )}
     </div>
   );
 };

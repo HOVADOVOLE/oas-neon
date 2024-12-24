@@ -56,6 +56,7 @@ export default function Navbar() {
               handleScroll("");
             }}
             className="-m-1.5 p-1.5 cursor-pointer"
+            aria-label="OAS-NEON"
           >
             <span className="sr-only">OAS-NEON</span>
             <img alt="/" src={logo} className="h-12 w-auto" />
@@ -78,6 +79,7 @@ export default function Navbar() {
                 color: item.color,
                 textShadow: `0 0 5px ${item.color}, 0 0 10px ${item.color}, 0 0 20px ${item.color}`,
               }}
+              aria-label="Navigation"
             >
               {item.name}
             </a>
@@ -118,6 +120,7 @@ export default function Navbar() {
                 handleScroll("");
               }}
               className="-m-1.5 p-1.5 cursor-pointer"
+              aria-label="OAS-NEON"
             >
               <span className="sr-only">OAS-NEON</span>
               <img alt="/" src={logo} className="h-10 w-auto" />
@@ -153,6 +156,7 @@ export default function Navbar() {
                       color: item.color,
                       textShadow: `0 0 5px ${item.color}, 0 0 10px ${item.color}, 0 0 20px ${item.color}`,
                     }}
+                    aria-label="Navigation"
                   >
                     {item.name}
                   </a>

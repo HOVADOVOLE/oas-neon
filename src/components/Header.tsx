@@ -39,6 +39,7 @@ export default function Header() {
                   handleScroll("kontakt");
                 }}
                 className="rounded-md bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                aria-label="Kontaktujte nás"
               >
                 Kontaktujte nás
               </a>
@@ -48,6 +49,7 @@ export default function Header() {
                   handleScroll("about-us");
                 }}
                 className="text-sm font-semibold leading-6 text-indigo-400 hover:text-indigo-300"
+                aria-label="Zjistěte více"
               >
                 Zjistěte více <span aria-hidden="true">→</span>
               </a>

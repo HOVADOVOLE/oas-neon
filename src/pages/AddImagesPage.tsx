@@ -9,6 +9,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import ImageManager from "../utils/Image";
 import Navbar from "../components/Navbar";
+import { toast } from "react-toastify";
 
 interface ImageItem {
   id: number;
@@ -24,6 +25,10 @@ const AddImagesPage = () => {
   const [category, setCategory] = useState<number | null>(null);
   const [filterCategory, setFilterCategory] = useState<number | null>(null);
   const [imageList, setImageList] = useState<ImageItem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(
+    null
+  );
   const captionTimers = useRef<{ [id: number]: NodeJS.Timeout }>({});
   const manager = new ImageManager();
 
@@ -41,25 +46,30 @@ const AddImagesPage = () => {
 
   const handleSubmit = async () => {
     if (selectedFiles.length === 0) {
-      alert("Vyberte alespoň jeden soubor před odesláním.");
+      toast.warning("Vyberte alespoň jeden soubor před odesláním.");
       return;
     }
     if (!category) {
-      alert("Vyberte kategorii pro všechny soubory.");
+      toast.warning("Vyberte kategorii pro všechny soubory.");
+      //alert("Vyberte kategorii pro všechny soubory.");
       return;
     }
+
+    setIsLoading(true);
 
     try {
       for (const file of selectedFiles) {
         await manager.addImage(file, "", category);
       }
-      alert("Soubory byly úspěšně nahrány!");
+      toast.success("Soubory byly úspěšně nahrány!");
       setSelectedFiles([]);
       setCategory(null);
       loadImages();
     } catch (error) {
       console.error("Chyba při nahrávání obrázků:", error);
-      alert("Nahrávání souborů se nezdařilo.");
+      toast.error("Nahrávání souborů se nezdařilo.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -92,6 +102,20 @@ const AddImagesPage = () => {
     );
   };
 
+  const handleDeleteImage = async (imageId: number) => {
+    try {
+      await manager.deleteImage(imageId);
+      setImageList((prevImages) =>
+        prevImages.filter((image) => image.id !== imageId)
+      );
+      setShowDeleteConfirm(null);
+      toast.success("Obrázek byl úspěšně smazán.");
+    } catch (error) {
+      console.error("Chyba při mazání obrázku:", error);
+      toast.error("Mazání obrázku se nezdařilo.");
+    }
+  };
+
   const handleDragEnd = async (event: any) => {
     const { active, over } = event;
 
@@ -104,7 +128,6 @@ const AddImagesPage = () => {
     setImageList(reorderedList);
 
     try {
-      // Přidání +1 k indexům, aby pozice začínaly od 1
       const movedImage = reorderedList[newIndex];
       await manager.moveImage(movedImage.id, newIndex + 1);
       console.log(
@@ -126,7 +149,6 @@ const AddImagesPage = () => {
     };
   }, []);
 
-  // Filtrování obrázků podle kategorie
   const filteredImages = filterCategory
     ? imageList.filter((image) => image.category_id === filterCategory)
     : imageList;
@@ -160,10 +182,40 @@ const AddImagesPage = () => {
 
   return (
     <div className="py-12 bg-gray-900 text-white min-h-screen flex flex-col items-center w-full">
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+          <div className="loader border-t-4 border-b-4 border-indigo-500 rounded-full w-12 h-12 animate-spin"></div>
+        </div>
+      )}
+
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90 z-50">
+          <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-lg font-semibold mb-4">Potvrzení smazání</h2>
+            <p className="text-sm mb-6">
+              Opravdu chcete smazat tento obrázek? Tuto akci nelze vrátit zpět.
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg"
+                onClick={() => setShowDeleteConfirm(null)}
+              >
+                Zrušit
+              </button>
+              <button
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
+                onClick={() => handleDeleteImage(showDeleteConfirm)}
+              >
+                Smazat
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Navbar />
-      <h2 className="text-4xl font-bold mb-6 text-center">Správa Obrázků</h2>
-      <div className="w-4/5 flex flex-col items-center">
-        {/* Nahrávání souborů */}
+
+      <div className="w-4/5 flex flex-col items-center mt-10">
         <input
           type="file"
           multiple
@@ -190,8 +242,7 @@ const AddImagesPage = () => {
           Nahrát Obrázky
         </button>
 
-        {/* Dropdown pro filtrování */}
-        <div className="w-full mt-6">
+        <div className="w-1/4 my-6 float-left">
           <select
             value={filterCategory || ""}
             onChange={(e) =>
@@ -218,10 +269,16 @@ const AddImagesPage = () => {
                 key={image.id}
                 className="relative flex flex-col gap-3 bg-gray-800 p-4 shadow-lg rounded-lg"
               >
-                {/* Přetahovací část */}
                 <SortableItem image={image} />
-
-                {/* Interaktivní část */}
+                <button
+                  className="absolute top-2 right-2 bg-red-500 text-black rounded-full w-6 h-6 flex items-center justify-center shadow-lg"
+                  onClick={() => {
+                    setShowDeleteConfirm(image.id);
+                    console.log("Delete button clicked for image ID", image.id);
+                  }}
+                >
+                  ×
+                </button>
                 <div className="flex flex-col gap-2 mt-2">
                   <input
                     type="text"

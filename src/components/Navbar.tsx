@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import logo from "../images/logo.webp";
+import { startTransition } from "react";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -24,7 +25,7 @@ export default function Navbar() {
       // Přesměrování na domovskou stránku
       await navigate("/");
 
-      // Po přesměrování počkáme na renderování stránky
+      // Po přesměrování čekání na renderování a skrolování
       setTimeout(() => {
         if (id) {
           const section = document.getElementById(id);
@@ -34,7 +35,6 @@ export default function Navbar() {
         }
       }, 100);
     } else if (id) {
-      // Scroll na sekci na aktuální stránce
       const section = document.getElementById(id);
       if (section) {
         section.scrollIntoView({ behavior: "smooth" });
@@ -148,7 +148,11 @@ export default function Navbar() {
                     onClick={(e) => {
                       e.preventDefault();
                       setMobileMenuOpen(false);
-                      if (!item.isExternal) handleScroll(item.id);
+                      if (item.isExternal) {
+                        navigate(`/${item.id}`);
+                      } else {
+                        handleScroll(item.id);
+                      }
                     }}
                     href={item.isExternal ? `/${item.id}` : `#${item.id}`}
                     className="block text-base font-semibold text-white hover:bg-gray-700 rounded-lg px-3 py-2 cursor-pointer"

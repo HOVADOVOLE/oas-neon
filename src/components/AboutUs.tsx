@@ -1,12 +1,37 @@
 import Work from "./Work";
 import ContactForm from "./ContactForm";
 import aboutUsImage from "../images/aboutus.webp";
+import neon from "../images/neon.webp";
+import heroBck from "../images/bitmapa.png";
 
 export default function AboutUs() {
   return (
-    <section id="about-us" className="py-24 bg-gray-900 relative">
-      <div className="w-full max-w-7xl px-4 md:px-5 lg:px-5 mx-auto mb-20">
-        <div className="grid lg:grid-cols-2 grid-cols-1 items-center gap-12">
+    <section
+      id="about-us"
+      className="py-24 bg-gray-900 relative overflow-hidden"
+      style={{
+        backgroundImage: `url(${neon})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        width: "100vw",
+        maxWidth: "100%",
+        margin: "0 auto",
+      }}
+    >
+      <div className="absolute inset-0 bg-black opacity-10 pointer-events-none"></div>
+      <div className="w-full max-w-7xl px-4 md:px-5 lg:px-2 mx-auto mb-20 relative z-10 rounded-3xl">
+        <div
+          className="grid lg:grid-cols-2 grid-cols-1 items-center gap-12 py-12 px-10 rounded-3xl"
+          style={{
+            backgroundImage: `url(${heroBck})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            width: "100%",
+            maxWidth: "100%",
+            margin: "0 auto",
+          }}
+        >
           {/* Left Column */}
           <div className="relative">
             <div className="rounded-xl overflow-hidden shadow-lg">
@@ -20,7 +45,7 @@ export default function AboutUs() {
           </div>
 
           {/* Right Column */}
-          <div className="text-white flex flex-col lg:items-start xl:items-start md:items-center gap-8 ">
+          <div className="text-white flex flex-col lg:items-start xl:items-start md:items-center gap-8">
             <h2
               className="text-5xl font-bold leading-snug font-manrope neon-text xl:text-left md:text-center"
               style={{
@@ -61,7 +86,7 @@ export default function AboutUs() {
                     color: "#ffff00",
                   }}
                 >
-                  800+
+                  3250+
                 </h3>
                 <p className="text-gray-400">Úspěšných projektů</p>
               </div>
@@ -74,7 +99,7 @@ export default function AboutUs() {
                     color: "#ff8000",
                   }}
                 >
-                  300+
+                  1570+
                 </h3>
                 <p className="text-gray-400">Spokojených klientů</p>
               </div>

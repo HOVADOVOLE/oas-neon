@@ -81,14 +81,14 @@ export default function Work(props: WorkProps) {
   return (
     <section
       id={texts[props.index].id}
-      className="py-12 relative mt-8 bg-gray-900"
+      className="py-12 px-3 relative mt-8 bg-transparent"
     >
       <div
-        className="w-full max-w-7xl px-4 md:px-5 lg:px-5 mx-auto bg-gradient-to-b from-transparent to-[#0307126c] rounded-3xl"
+        className="w-full max-w-7xl px-4 py-10 md:px-5 lg:px-5 mx-auto bg-gradient-to-b from-[#090909fb] to-[#090909] rounded-3xl"
         style={{
           borderRadius: "1.5rem", // Zaoblení rohů
           boxShadow:
-            "rgba(50, 50, 93, 0.25) 0px 15px 25px -5px, rgba(0, 0, 0, 0.3) 5px 20px 30px -10px", // Stíny vlevo, vpravo a dole
+            "rgba(50, 50, 93, 0.25) 0px 15px 25px -5px, rgba(0, 0, 0, 0.3) 5px 20px 30px -10px", // Stíny
         }}
       >
         <div className="w-full max-w-7xl px-4 md:px-5 lg:px-5 mx-auto p-3">
@@ -111,7 +111,30 @@ export default function Work(props: WorkProps) {
                 props.index % 2 === 0 ? "lg:order-1" : "lg:order-2"
               }`}
             >
-              {text(props.index)}
+              <div className="w-full flex-col justify-start lg:items-start items-center gap-8 flex">
+                <h2
+                  className="text-4xl font-bold font-manrope lg:text-start text-center"
+                  style={{
+                    color: texts[props.index].color,
+                    textShadow: texts[props.index].shadow,
+                  }}
+                >
+                  {texts[props.index].heading}
+                </h2>
+                <p className="text-gray-100 text-lg leading-relaxed lg:text-start text-center">
+                  {texts[props.index].text}
+                </p>
+                <button
+                  onClick={() =>
+                    (window.location.href = `${
+                      texts[props.index].link
+                    }?category=${texts[props.index].id}`)
+                  }
+                  className="px-6 py-3 bg-blue-700 hover:bg-blue-900 rounded-lg shadow-lg text-white font-medium text-lg transition-all duration-500"
+                >
+                  Zjisti více
+                </button>
+              </div>
             </div>
           </div>
         </div>

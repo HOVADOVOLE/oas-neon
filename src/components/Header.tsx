@@ -1,5 +1,5 @@
 import Navbar from "./Navbar";
-import backgroundImage from "../images/bck.webp"; // Correct import path
+import backgroundImage from "../images/background.webp";
 
 export default function Header() {
   const handleScroll = (id: string) => {
@@ -15,7 +15,7 @@ export default function Header() {
         <img
           src={backgroundImage} // Use the imported image
           alt="Výroba reklam a zábavy"
-          className="h-full w-full object-cover"
+          className="h-full w-full lg:object-cover sm:object-none sm:object-right-top"
         />
         <div className="absolute inset-0 bg-black bg-opacity-60"></div>
       </div>

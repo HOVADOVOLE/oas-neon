@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import logo from "../images/logo.webp";
-import { startTransition } from "react";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true); // Viditelnost navbaru
+  const [lastScrollY, setLastScrollY] = useState(0); // Poslední pozice scrollování
 
   const navigation = [
     { name: "Domů", id: "", color: "#FF1493", isExternal: true },
@@ -22,10 +23,7 @@ export default function Navbar() {
 
   const handleScroll = async (id: string) => {
     if (location.pathname !== "/") {
-      // Přesměrování na domovskou stránku
       await navigate("/");
-
-      // Po přesměrování čekání na renderování a skrolování
       setTimeout(() => {
         if (id) {
           const section = document.getElementById(id);
@@ -42,11 +40,38 @@ export default function Navbar() {
     }
   };
 
+  // Sledování scrollování
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY) {
+        // Uživatel scrolluje dolů
+        setIsNavbarVisible(false);
+      } else {
+        // Uživatel scrolluje nahoru
+        setIsNavbarVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY]);
+
   return (
-    <header className="absolute inset-x-0 top-0 z-50">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-transform duration-300 ${
+        isNavbarVisible ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       <nav
         aria-label="Global"
-        className="flex items-center justify-between px-4 py-3 lg:px-8 bg-gray-900/40 backdrop-blur-lg"
+        className="flex items-center justify-between px-4 py-3 lg:px-8 bg-[#111111] backdrop-blur-lg"
       >
         {/* Logo */}
         <div className="flex items-center">
@@ -74,7 +99,7 @@ export default function Navbar() {
                 else navigate(`/${item.id}`);
               }}
               href={item.isExternal ? `/${item.id}` : `#${item.id}`}
-              className="text-lg font-semibold text-white relative px-2 cursor-pointer"
+              className="text-lg font-semibold text-white relative px-4 py-2 cursor-pointer transition-transform duration-200 hover:scale-105 hover:brightness-150 group"
               style={{
                 color: item.color,
                 textShadow: `0 0 5px ${item.color}, 0 0 10px ${item.color}, 0 0 20px ${item.color}`,
@@ -82,6 +107,7 @@ export default function Navbar() {
               aria-label="Navigation"
             >
               {item.name}
+              <span className="absolute left-0 right-0 bottom-0 h-[3px] bg-transparent transition-all duration-300 group-hover:bg-current"></span>
             </a>
           ))}
         </div>

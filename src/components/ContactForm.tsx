@@ -1,12 +1,16 @@
 export default function ContactForm() {
   return (
-    <section id="kontakt" className="py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section
+      id="kontakt"
+      className="py-24 bg-transparent flex items-center justify-center min-h-screen"
+    >
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 backdrop-blur-xl rounded-2xl">
+        <div className="absolute inset-0 bg-[#dbdbd9] opacity-10 pointer-events-none rounded-2xl"></div>
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-24">
           <div className="flex items-center lg:mb-0 mb-10">
             <div className="">
-              <h2 className="text-gray-900 font-manrope text-4xl font-semibold leading-10 mb-9 lg:text-left text-center">
-                Reach Out To Us
+              <h2 className="text-black font-manrope text-4xl font-bold leading-10 mb-9 lg:text-left text-center">
+                Ozvěte se nám
               </h2>
               <form action="#">
                 <input
@@ -31,7 +35,7 @@ export default function ContactForm() {
               </form>
             </div>
           </div>
-          <div className="lg:max-w-xl w-full h-[600px] flex items-center justify-center  bg-cover bg-no-repeat bg-black ">
+          <div className="lg:max-w-xl w-full h-[600px] flex items-center justify-center  bg-cover bg-no-repeat bg-black my-4">
             <div className="">
               <div className="lg:w-96 w-auto h-auto bg-white shadow-xl lg:p-6 p-4">
                 <svg

@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="bg-[#111111] text-white py-14">
+    <footer className="bg-gradient-to-t from-[#111111] to-[#161616] text-white py-14">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Top Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-gray-700 pb-10">
@@ -126,7 +126,7 @@ export default function Footer() {
                   fill="currentColor"
                   viewBox="0 0 16 16"
                 >
-                  <path d="M6.94 8.94l-2.47 2.47c-.2.2-.47.2-.67 0l-1.06-1.06a.5.5 0 010-.67l2.47-2.47c.2-.2.47-.2.67 0l1.06 1.06a.5.5 0 010 .67z" />
+                  <path d="M6.94 8.94l-2.47 2.47c-.2-.2-.47-.2-.67 0l-1.06-1.06a.5.5 0 010-.67l2.47-2.47c.2-.2.47-.2.67 0l1.06 1.06a.5.5 0 010 .67z" />
                 </svg>
               </a>
             </div>
@@ -135,7 +135,7 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="mt-10 text-center text-sm text-gray-500">
           <p>
-            © 2024 <span className="text-indigo-400">OAS-NEON</span>. Všechna
+            © 2025 <span className="text-indigo-400">OAS-NEON</span>. Všechna
             práva vyhrazena.
           </p>
         </div>

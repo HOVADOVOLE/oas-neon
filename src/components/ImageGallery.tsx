@@ -32,7 +32,6 @@ const ImageGallery: React.FC = () => {
     const loadImages = async () => {
       const imageManager = new ImageManager();
       const images = await imageManager.getImages();
-
       if (images) {
         setAllImages(images);
         setFilteredImages(images);

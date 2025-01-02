@@ -3,7 +3,7 @@ import Footer from "../components/Footer";
 
 const NotFoundPage = () => {
   return (
-    <section className="bg-gray-900 text-white relative py-24 min-h-screen h-auto">
+    <section className="bg-[#111111] text-white relative py-24 min-h-screen h-auto">
       <div className=" max-w-7xl px-4 md:px-5 lg:px-5 mx-auto">
         <Navbar />
         <div className="flex flex-col items-center justify-center text-center min-h-[60vh]">
@@ -26,7 +26,7 @@ const NotFoundPage = () => {
           </p>
           <a
             href="/"
-            className="px-6 py-3 bg-indigo-600 rounded-lg text-lg font-medium hover:bg-indigo-700 transition"
+            className="px-6 py-3 bg-[#FF007F] rounded-lg text-lg font-medium hover:bg-[#BF053D] transition"
           >
             Zpět na domovskou stránku
           </a>

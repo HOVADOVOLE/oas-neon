@@ -152,9 +152,9 @@ const AddImagesPage: React.FC = () => {
   };
 
   return (
-    <div className="py-12 bg-gray-900 text-white min-h-screen flex flex-col items-center w-full">
+    <div className="py-12 bg-[#111111] text-white min-h-screen flex flex-col items-center w-full">
       {showDeleteConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-[#111111] bg-opacity-90 z-50">
           <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-lg font-semibold mb-4">Potvrzení smazání</h2>
             <p className="text-sm mb-6">
@@ -181,7 +181,7 @@ const AddImagesPage: React.FC = () => {
       <Navbar />
       {loading ? (
         <div className="flex items-center justify-center h-screen">
-          <div className="loader border-t-4 border-b-4 border-indigo-500 rounded-full w-12 h-12 animate-spin"></div>
+          <div className="loader border-t-4 border-b-4 border-[#FF007F] rounded-full w-12 h-12 animate-spin"></div>
         </div>
       ) : (
         <>
@@ -203,7 +203,7 @@ const AddImagesPage: React.FC = () => {
 
             <button
               onClick={() => setIsPopupOpen(true)}
-              className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md focus:outline-none sm:ml-auto w-full sm:w-1/3 md:w-1/3 lg:w-1/5 xl:w-1/12"
+              className="px-6 py-2 bg-[#FF007F] hover:bg-[#BF053D] text-white font-semibold rounded-lg shadow-md focus:outline-none sm:ml-auto w-full sm:w-1/3 md:w-1/3 lg:w-1/5 xl:w-1/12"
             >
               Nahrát Obrázky
             </button>
@@ -263,7 +263,9 @@ const AddImagesPage: React.FC = () => {
               </div>
             </SortableContext>
           </DndContext>
-          <Footer />
+          <div className="w-full bottom-0 mt-3">
+            <Footer />
+          </div>
         </>
       )}
     </div>

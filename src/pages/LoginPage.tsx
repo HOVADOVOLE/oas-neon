@@ -24,8 +24,8 @@ const LoginPage = () => {
     values: { username: string; password: string },
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
-    const storedUsername = "niger";
-    const storedPassword = "niger";
+    const storedUsername = import.meta.env.VITE_USERNAME;
+    const storedPassword = import.meta.env.VITE_PASSWORD;
 
     if (
       values.username === storedUsername &&
@@ -43,7 +43,7 @@ const LoginPage = () => {
   };
 
   return (
-    <section className="relative flex items-center justify-center min-h-screen bg-gray-900 text-white">
+    <section className="relative bg-[#111111] flex items-center justify-center min-h-screen  text-white">
       <img
         //src="https://pagedone.io/asset/uploads/1702362010.png"
         alt="Gradient background image"
@@ -101,7 +101,7 @@ const LoginPage = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-12 bg-indigo-600 text-white font-semibold rounded-full shadow-md hover:bg-indigo-700 transition-all"
+                className="w-full h-12 bg-[#FF007F] text-white font-semibold rounded-full shadow-md hover:bg-[#BF053D] transition-all"
               >
                 Přihlásit se
               </button>

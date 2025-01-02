@@ -9,7 +9,7 @@ export default function AboutUs() {
   return (
     <section
       id="about-us"
-      className="py-24 bg-gray-900 relative overflow-hidden"
+      className="py-24 bg-[#111111] relative overflow-hidden"
       style={{
         backgroundImage: `url(${neon})`,
         backgroundSize: "cover",

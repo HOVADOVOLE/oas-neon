@@ -31,7 +31,7 @@ function App() {
             {/* Obalení Suspense pro lazy-loading */}
             <Suspense
               fallback={
-                <div className="fixed inset-0 flex items-center justify-center bg-gray-900">
+                <div className="fixed inset-0 flex items-center justify-center bg-[#111111]">
                   <TailSpin
                     color="#FF007F"
                     height={80}

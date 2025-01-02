@@ -11,14 +11,12 @@ type ImageData = {
   category_name?: string;
 };
 
-const SUPABASE_URL = "https://bxwiyqyycdbhyrtqfbbf.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ4d2l5cXl5Y2RiaHlydHFmYmJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIzOTU0NDEsImV4cCI6MjA0Nzk3MTQ0MX0.O2Iaf5TF_Bcndt7XRx4OzIVhb_XeJtZKWxCtHDggcH8";
-
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export default class ImageManager {
-  private supabase = supabaseClient;
+  supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
   private tableName = "images";
   private bucketName = "images"; // Název bucketu v Supabase Storage
 
@@ -48,7 +46,7 @@ export default class ImageManager {
    */
   public async updateCategory(id: number, categoryId: number): Promise<void> {
     try {
-      const { error } = await this.supabase
+      const { error } = await this.supabaseClient
         .from(this.tableName)
         .update({ category_id: categoryId })
         .eq("id", id);
@@ -57,12 +55,13 @@ export default class ImageManager {
 
       console.log(`Category updated for image with ID: ${id}`);
     } catch (error) {
-      console.error("Error updating category in Supabase:", error);
+      console.error("Error updating category in SupabaseClient:", error);
       throw error;
     }
   }
+
   /**
-   * Přidání nového obrázku do Supabase Storage a uložení jeho cesty do databáze
+   * Přidání nového obrázku do SupabaseClient Storage a uložení jeho cesty do databáze
    */
   public async addImage(
     file: File,
@@ -73,20 +72,21 @@ export default class ImageManager {
       // Převod obrázku do WebP
       const webPFile = await this.convertToWebP(file);
 
-      // Nahrání souboru do Supabase Storage
+      // Nahrání souboru do SupabaseClient Storage
       const fileName = `${Date.now()}_${webPFile.name}`;
-      const { error: uploadError } = await this.supabase.storage
+      const { error: uploadError } = await this.supabaseClient.storage
         .from(this.bucketName)
         .upload(fileName, webPFile);
 
       if (uploadError) {
         throw new Error(
-          "Error uploading file to Supabase Storage: " + uploadError.message
+          "Error uploading file to SupabaseClient Storage: " +
+            uploadError.message
         );
       }
 
       // Získání veřejné URL souboru
-      const { data } = this.supabase.storage
+      const { data } = this.supabaseClient.storage
         .from(this.bucketName)
         .getPublicUrl(fileName);
 
@@ -96,7 +96,7 @@ export default class ImageManager {
       }
 
       // Uložení cesty obrázku do databáze
-      const { error } = await this.supabase.from(this.tableName).insert({
+      const { error } = await this.supabaseClient.from(this.tableName).insert({
         file_path: publicUrl,
         file_name: webPFile.name,
         caption,
@@ -108,7 +108,7 @@ export default class ImageManager {
 
       console.log(`Image added successfully: ${publicUrl}`);
     } catch (error) {
-      console.error("Error adding image to Supabase:", error);
+      console.error("Error adding image to SupabaseClient:", error);
     }
   }
 
@@ -117,7 +117,7 @@ export default class ImageManager {
    */
   public async getImages(): Promise<ImageData[]> {
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await this.supabaseClient
         .from(this.tableName)
         .select(
           `
@@ -132,8 +132,6 @@ export default class ImageManager {
         .order("position", { ascending: true });
 
       if (error) throw error;
-
-      console.log("Fetched images from database:", data);
 
       return (data || []).map((img: any) => ({
         id: img.id ?? 0,
@@ -154,7 +152,7 @@ export default class ImageManager {
    */
   public async updateCaption(id: number, caption: string): Promise<void> {
     try {
-      const { error } = await this.supabase
+      const { error } = await this.supabaseClient
         .from(this.tableName)
         .update({ caption })
         .eq("id", id);
@@ -163,7 +161,7 @@ export default class ImageManager {
 
       console.log(`Caption updated for image with ID: ${id}`);
     } catch (error) {
-      console.error("Error updating caption in Supabase:", error);
+      console.error("Error updating caption in SupabaseClient:", error);
     }
   }
 
@@ -175,20 +173,20 @@ export default class ImageManager {
     new_position: number
   ): Promise<void> {
     try {
-      const { error } = await this.supabase.rpc("move_image", {
+      const { error } = await this.supabaseClient.rpc("move_image", {
         image_id: image_id,
         new_position: new_position,
       });
 
       if (error) throw error;
     } catch (error) {
-      console.error("Error updating image order in Supabase:", error);
+      console.error("Error updating image order in SupabaseClient:", error);
     }
   }
   public async deleteImage(imageId: number): Promise<void> {
     try {
       // Načtení cesty k souboru
-      const { data, error } = await this.supabase
+      const { data, error } = await this.supabaseClient
         .from(this.tableName)
         .select("file_path")
         .eq("id", imageId)
@@ -202,14 +200,14 @@ export default class ImageManager {
       }
 
       // Smazání souboru ze Supabase Storage
-      const { error: deleteError } = await this.supabase.storage
+      const { error: deleteError } = await this.supabaseClient.storage
         .from(this.bucketName)
         .remove([filePath]);
 
       if (deleteError) throw deleteError;
 
       // Smazání záznamu z databáze
-      const { error: dbError } = await this.supabase
+      const { error: dbError } = await this.supabaseClient
         .from(this.tableName)
         .delete()
         .eq("id", imageId);

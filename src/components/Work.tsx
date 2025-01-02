@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import neony from "../images/neony.webp";
 import potisky from "../images/potisky.webp";
 import samolepky from "../images/samolepky.webp";
@@ -12,6 +13,7 @@ export default function Work(props: WorkProps) {
       heading: "Neonová reklama",
       text: "Naše neonové reklamy jsou ručně vyráběné z kvalitních neonových trubic, které dodají vašemu podnikání, domácnosti nebo události jedinečný vzhled. S více než 25 lety zkušeností garantujeme precizní zpracování a design na míru.",
       color: "#ff007f", // Růžová
+      hoverColor: "#ff5733", // Oranžová
       shadow:
         "0 0 20px rgba(255, 0, 128, 0.8), 0 0 30px rgba(255, 0, 128, 0.6)",
       buttonShadow:
@@ -19,12 +21,13 @@ export default function Work(props: WorkProps) {
       textColor: "#000000",
       image: neony,
       id: "neony",
-      link: "/galerie",
+      link: "Neony",
     },
     {
       heading: "Potisky na textil",
       text: "Nabízíme profesionální potisky na trička, mikiny a další textil. Možnost tisku barevných obrázků, textů i grafik podle vašeho přání. Používáme kvalitní technologie, včetně DTF tisku, pro trvanlivé a detailní výsledky.",
       color: "#00ffff", // Tyrkysová
+      hoverColor: "#00C5C5FF", // Zelená
       shadow:
         "0 0 20px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.6)",
       buttonShadow:
@@ -32,12 +35,13 @@ export default function Work(props: WorkProps) {
       textColor: "#000000",
       image: potisky,
       id: "potisky",
-      link: "/galerie",
+      link: "Potisky",
     },
     {
       heading: "Řezaná reklama",
       text: "Navrhujeme a realizujeme polepy na auta, vlaky, výlohy i reklamní cedule. Naše polepy jsou nejen estetické, ale také odolné, což zajišťuje jejich dlouhou životnost a atraktivní vzhled pro vaše potřeby.",
       color: "#ffff00", // Žlutá
+      hoverColor: "#FFD700FF",
       shadow:
         "0 0 20px rgba(255, 255, 0, 0.8), 0 0 30px rgba(255, 255, 0, 0.6)",
       buttonShadow:
@@ -45,9 +49,15 @@ export default function Work(props: WorkProps) {
       textColor: "#000000",
       image: samolepky,
       id: "samolepky",
-      link: "/galerie",
+      link: "Polepy",
     },
   ];
+
+  const navigate = useNavigate();
+
+  const handleNavigation = (category: string) => {
+    navigate(`/galerie?filter=${category}`);
+  };
 
   const image = (index: number) => {
     return (
@@ -107,12 +117,20 @@ export default function Work(props: WorkProps) {
                   {texts[props.index].text}
                 </p>
                 <button
-                  onClick={(event) => event.preventDefault()}
+                  onClick={() => handleNavigation(texts[props.index].link)}
                   style={{
                     backgroundColor: texts[props.index].color, // Barva tlačítka
                     boxShadow: texts[props.index].buttonShadow, // Neonový stín
                   }}
-                  className="px-6 py-3 rounded-lg shadow-lg font-medium text-lg transition-all duration-500 text-neutral-800"
+                  className="px-6 py-3 rounded-lg shadow-lg font-medium text-lg transition-all duration-500 text-neutral-800 hover:bg-[custom_hover_color]"
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor =
+                      texts[props.index].hoverColor)
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor =
+                      texts[props.index].color)
+                  }
                 >
                   Zjisti více
                 </button>

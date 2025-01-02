@@ -21,7 +21,7 @@ export default function Work(props: WorkProps) {
       textColor: "#000000",
       image: neony,
       id: "neony",
-      link: "Neony",
+      link: "neony",
     },
     {
       heading: "Potisky na textil",
@@ -35,7 +35,7 @@ export default function Work(props: WorkProps) {
       textColor: "#000000",
       image: potisky,
       id: "potisky",
-      link: "Potisky",
+      link: "potisky",
     },
     {
       heading: "Řezaná reklama",
@@ -49,7 +49,7 @@ export default function Work(props: WorkProps) {
       textColor: "#000000",
       image: samolepky,
       id: "samolepky",
-      link: "Polepy",
+      link: "polepy",
     },
   ];
 

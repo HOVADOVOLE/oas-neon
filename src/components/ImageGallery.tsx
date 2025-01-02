@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
 import ImageManager from "../utils/Image";
@@ -23,6 +24,8 @@ const ImageGallery: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [isImageLoading, setIsImageLoading] = useState<boolean>(true);
   const [isGalleryLoading, setIsGalleryLoading] = useState<boolean>(true);
+  const [isFiltering, setIsFiltering] = useState<boolean>(true);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const loadImages = async () => {
@@ -38,6 +41,22 @@ const ImageGallery: React.FC = () => {
 
     loadImages();
   }, []);
+
+  useEffect(() => {
+    const initialFilter = searchParams.get("filter");
+    const categoryMapping: { [key: string]: string } = {
+      neony: "1",
+      potisky: "2",
+      polepy: "3",
+    };
+
+    if (initialFilter && categoryMapping[initialFilter]) {
+      setSelectedCategory(categoryMapping[initialFilter]);
+    } else {
+      setSelectedCategory("all");
+    }
+    setIsFiltering(false);
+  }, [searchParams]);
 
   useEffect(() => {
     if (selectedCategory === "all") {
@@ -98,7 +117,7 @@ const ImageGallery: React.FC = () => {
         }}
       >
         <Navbar />
-        {isGalleryLoading ? (
+        {isGalleryLoading || isFiltering ? (
           <div className="fixed inset-0 flex items-center justify-center bg-gray-900">
             <div className="text-white text-xl">Načítám galerii...</div>
           </div>

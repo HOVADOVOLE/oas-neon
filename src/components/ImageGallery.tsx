@@ -7,6 +7,7 @@ import Navbar from "./Navbar";
 import ErrorBoundary from "./ErrorBoundary";
 import Footer from "./Footer";
 import seamless_gallery from "../images/seamless-gallery.jpeg";
+import { TailSpin } from "react-loader-spinner";
 
 interface ImageList {
   id: number;
@@ -118,13 +119,21 @@ const ImageGallery: React.FC = () => {
       >
         <Navbar />
         {isGalleryLoading || isFiltering ? (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-900">
-            <div className="text-white text-xl">Načítám galerii...</div>
+          <div className="fixed inset-0 flex items-center justify-center bg-[#111111]">
+            <TailSpin
+              color="#FF007F"
+              height={80}
+              width={80}
+              ariaLabel="načítání"
+            />
+            <div className="text-[#FF007F] text-xl font-semibold ml-2">
+              Načítám galerii...
+            </div>
           </div>
         ) : (
           <>
-            <div className="absolute inset-0 bg-black opacity-15 pointer-events-none"></div>
-            <div className="w-100 flex flex-col items-center mt-14">
+            <div className="absolute inset-0 bg-black opacity-50 pointer-events-none"></div>
+            <div className="w-100 flex flex-col items-center mt-14 z-10">
               <h1
                 className="text-6xl font-bold text-center mb-8"
                 style={{
@@ -142,7 +151,7 @@ const ImageGallery: React.FC = () => {
                   id="category"
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="py-3 px-4 bg-gray-800 text-white rounded-lg shadow-lg w-full sm:w-1/2 md:w-1/4 lg:w-1/5 xl:w-1/6 transition-all"
+                  className="py-3 px-4 bg-[#111111] text-white rounded-lg shadow-lg w-full sm:w-1/2 md:w-1/4 lg:w-1/5 xl:w-1/6 transition-all"
                 >
                   <option value="all">Všechny</option>
                   <option value="1">Neony</option>
@@ -212,9 +221,9 @@ const ImageGallery: React.FC = () => {
             </div>
           </>
         )}
-        <div className="w-full mt-10">
-          <Footer />
-        </div>
+      </div>
+      <div className="w-full bottom-0">
+        <Footer />
       </div>
     </>
   );

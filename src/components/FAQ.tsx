@@ -39,7 +39,7 @@ export default function FAQ() {
     <section className="py-24 bg-[#111111]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-16">
-          <h6 className="text-lg text-[#FF5733] font-medium text-center mb-2">
+          <h6 className="text-lg text-gray-200 font-medium text-center mb-2">
             Často kladené otázky
           </h6>
           <h2

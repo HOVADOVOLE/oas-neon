@@ -8,12 +8,13 @@ export default function Header() {
       section.scrollIntoView({ behavior: "smooth" });
     }
   };
+
   return (
     <div className="relative h-screen text-white">
       <Navbar />
       <div className="absolute inset-0 -z-10">
         <img
-          src={backgroundImage} // Use the imported image
+          src={backgroundImage}
           alt="Výroba reklam a zábavy"
           className="h-full w-full lg:object-cover sm:object-none sm:object-right-top"
         />
@@ -23,7 +24,7 @@ export default function Header() {
         <div className="mx-auto max-w-4xl py-32 sm:py-48 lg:py-56">
           <div className="text-center">
             <h1
-              className="text-6xl font-extrabold tracking-tight leading-tight sm:text-7xl text-[#E60202]"
+              className="text-6xl font-extrabold tracking-tight leading-tight sm:text-7xl text-[#E60202] animate-fall"
               style={{
                 fontFamily: "mexcellent",
                 textShadow:
@@ -32,16 +33,17 @@ export default function Header() {
             >
               Reklamy a zábava na míru, které oslní
             </h1>
-            <p className="mt-6 text-lg font-medium text-gray-300 sm:text-xl">
+            <p className="mt-6 text-lg font-medium text-gray-300 sm:text-xl animate-fall delay-200">
               S více než <strong>25 lety zkušeností</strong> nabízíme výrobu
-              <strong> neonových reklam</strong>,
-              <strong> potisků na textil</strong>, a
+              <strong> neonových reklam</strong>,{" "}
+              <strong>potisků na textil</strong>, a
               <strong> polepů na auta</strong>. Vaše vize proměníme v realitu s
               precizností a jedinečným stylem.
             </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
+            <div className="mt-10 flex items-center justify-center gap-x-6 animate-fall delay-500">
               <a
                 onClick={(e) => {
+                  e.preventDefault();
                   handleScroll("kontakt");
                 }}
                 className="rounded-md bg-[#ff007f] px-5 py-3 cursor-pointer text-sm font-semibold text-white shadow-lg hover:bg-[#BF053D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff007f] transition-all duration-300"
@@ -54,12 +56,13 @@ export default function Header() {
               </a>
               <a
                 onClick={(e) => {
+                  e.preventDefault();
                   handleScroll("about-us");
                 }}
-                className="text-sm font-semibold cursor-pointer leading-6 text-[#00ff00] hover:text-[#89fa8f] transition-all duration-300"
+                className="text-sm font-semibold cursor-pointer leading-6 text-[#00ffff] hover:text-[#00C5C5] transition-all duration-300"
                 aria-label="Zjistěte více"
                 style={{
-                  textShadow: "0 0 8px #00ff00, 0 0 16px #00ff00",
+                  textShadow: "0 0 8px #00ffff, 0 0 16px #00ffff",
                 }}
               >
                 Zjistěte více <span aria-hidden="true">→</span>

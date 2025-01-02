@@ -1,0 +1,48 @@
+.neon-border-container {
+  position: relative;
+  border-radius: 1.5rem; /* Zaoblené rohy */
+  overflow: hidden;
+  background: linear-gradient(90deg, rgba(255, 0, 128, 1), rgba(0, 0, 255, 1));
+  padding: 10px;
+  box-shadow: 0 0 20px rgba(255, 0, 128, 0.8), 0 0 30px rgba(0, 0, 255, 0.6); /* Neonový stín */
+}
+
+.neon-border-container .content {
+  background: transparent; /* Průhledné pozadí */
+  border-radius: 1.5rem; /* Zaoblené rohy obsahu */
+  padding: 20px;
+  box-shadow: 0 0 30px rgba(255, 0, 128, 0.8), 0 0 50px rgba(0, 0, 255, 0.8); /* Zářivý efekt */
+}
+
+.neon-border-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 1.5rem;
+  padding: 5px;
+  background: linear-gradient(90deg, rgba(255, 0, 128, 1), rgba(0, 0, 255, 1));
+  box-shadow: 0 0 20px rgba(255, 0, 128, 0.8), 0 0 30px rgba(0, 0, 255, 0.6); /* Přidání neonového efektu */
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.gradient-background {
+  background: linear-gradient(90deg, rgba(255, 0, 128, 1), rgba(0, 0, 255, 1));
+  border-radius: 1.5rem;
+  padding: 5px; /* Menší mezera */
+  overflow: hidden;
+}
+
+.inner-content {
+  background: #000;
+  border-radius: 1.5rem;
+  padding: 20px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  width: calc(100% - 1px); /* Šířka přizpůsobená paddingu */
+  margin: 0 auto;
+}

@@ -42,7 +42,10 @@ export default function FAQ() {
           <h6 className="text-lg text-[#FF5733] font-medium text-center mb-2">
             Často kladené otázky
           </h6>
-          <h2 className="text-4xl font-manrope text-center font-bold text-white leading-[3.25rem]">
+          <h2
+            className="text-4xl font-manrope text-center font-bold text-[#FF004D] leading-[3.25rem]"
+            style={{ fontFamily: "mexcellent" }}
+          >
             Máte otázky? Máme odpovědi!
           </h2>
         </div>
@@ -65,14 +68,14 @@ export default function FAQ() {
                 onClick={() => toggleAccordion(index)}
                 aria-controls={`collapse-${index}`}
                 style={{
-                  color: activeIndex === index ? "#FF5733" : "#FF4136", // Different neon red shades for open/closed
+                  color: activeIndex === index ? "#FF5733" : "#f4f4f4", // Different neon red shades for open/closed
                   textShadow:
                     activeIndex === index
                       ? "0 0 8px #FF5733" // Glow for active text
                       : "0 0 5px #FF4136", // Glow for closed text
                 }}
               >
-                <h5 className="text-lg font-medium hover:text-[#ff6847]">
+                <h5 className="text-lg font-medium hover:text-[#ff0000]">
                   {faq.question}
                 </h5>
                 <svg

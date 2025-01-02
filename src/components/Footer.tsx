@@ -1,4 +1,32 @@
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaEnvelope,
+  FaPhoneAlt,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 export default function Footer() {
+  const navigate = useNavigate();
+
+  const handleNavigation = (path: string, sectionId?: string) => {
+    if (path === "/galerie") {
+      // Navigace přímo na stránku Galerie
+      navigate(path);
+    } else {
+      // Navigace na hlavní stránku a posun na sekci
+      navigate(path);
+      if (sectionId) {
+        setTimeout(() => {
+          const section = document.getElementById(sectionId);
+          if (section) {
+            section.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 100); // Krátká prodleva pro načtení stránky
+      }
+    }
+  };
+
   return (
     <footer className="bg-gradient-to-t from-[#111111] to-[#161616] text-white py-14">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -6,9 +34,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-gray-700 pb-10">
           {/* About Section */}
           <div>
-            <h3 className="text-lg font-semibold text-indigo-500 mb-4">
-              O nás
-            </h3>
+            <h3 className="text-lg font-semibold text-[#FF007F] mb-4">O nás</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
               Specializujeme se na výrobu neonových reklam, potisky na textil a
               řezanou reklamu. S více než 25 lety zkušeností nabízíme špičkové
@@ -17,117 +43,108 @@ export default function Footer() {
           </div>
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold text-indigo-500 mb-4">
+            <h3 className="text-lg font-semibold text-[#FF007F] mb-4">
               Navigace
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <a
-                  href="#home"
-                  className="hover:text-indigo-400"
+                <button
+                  onClick={() => handleNavigation("/", "home")}
+                  className="hover:text-[#FF5733] text-left"
                   aria-label="Domů"
                 >
                   Domů
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  href="#services"
-                  className="hover:text-indigo-400"
-                  aria-label="Naše služby"
+                <button
+                  onClick={() => handleNavigation("/", "about-us")}
+                  className="hover:text-[#FF5733] text-left"
+                  aria-label="O nás"
                 >
-                  Služby
-                </a>
+                  O nás
+                </button>
               </li>
               <li>
-                <a
-                  href="#galerie"
-                  className="hover:text-indigo-400"
-                  aria-label="Naše galerie"
+                <button
+                  onClick={() => handleNavigation("/", "neony")}
+                  className="hover:text-[#FF5733] text-left"
+                  aria-label="Neony"
+                >
+                  Neony
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavigation("/", "potisky")}
+                  className="hover:text-[#FF5733] text-left"
+                  aria-label="Potisky"
+                >
+                  Potisky
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavigation("/", "samolepky")}
+                  className="hover:text-[#FF5733] text-left"
+                  aria-label="Samolepky"
+                >
+                  Samolepky
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavigation("/galerie")}
+                  className="hover:text-[#FF5733] text-left"
+                  aria-label="Galerie"
                 >
                   Galerie
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  href="#contact"
-                  className="hover:text-indigo-400"
+                <button
+                  onClick={() => handleNavigation("/", "kontakt")}
+                  className="hover:text-[#FF5733] text-left"
                   aria-label="Kontaktujte nás"
                 >
                   Kontakt
-                </a>
+                </button>
               </li>
             </ul>
           </div>
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold text-indigo-500 mb-4">
+            <h3 className="text-lg font-semibold text-[#FF007F] mb-4">
               Kontakt
             </h3>
             <ul className="space-y-3 text-sm">
               <li className="flex items-center space-x-3">
-                <svg
-                  className="w-5 h-5 text-indigo-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 12v1m-4-1v1m8 4v.01M12 8v1m-4-1v1m8 4v.01M4 12v1m8-5v1m4 5v.01M8 12v1m8 4v.01M12 8v1m-4 4v.01"
-                  />
-                </svg>
+                <FaEnvelope className="text-[#FF007F] text-lg" />
                 <span>neonar@seznam.cz</span>
               </li>
               <li className="flex items-center space-x-3">
-                <svg
-                  className="w-5 h-5 text-indigo-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 8l7.89 5.26a3 3 0 003.22 0L21 8M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H5a2 2 0 00-2 2v5a2 2 0 002 2z"
-                  />
-                </svg>
+                <FaPhoneAlt className="text-[#FF007F] text-lg" />
                 <span>+420 777 034 364</span>
               </li>
             </ul>
             <div className="mt-4 flex space-x-4">
               <a
-                href="#"
-                className="p-3 bg-gray-800 rounded-full hover:bg-indigo-500 transition"
+                href="https://www.facebook.com/petrjiri.brejsa"
+                className="p-3 bg-gray-800 rounded-full hover:bg-[#FF007F] transition"
                 aria-label="Facebook"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <svg
-                  className="w-5 h-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M6.94 8.94l-2.47 2.47c-.2.2-.47.2-.67 0l-1.06-1.06a.5.5 0 010-.67l2.47-2.47c.2-.2.47-.2.67 0l1.06 1.06a.5.5 0 010 .67z" />
-                </svg>
+                <FaFacebookF className="text-white text-lg" />
               </a>
               <a
-                href="#"
-                className="p-3 bg-gray-800 rounded-full hover:bg-indigo-500 transition"
+                href="https://www.instagram.com/oas_neon/"
+                className="p-3 bg-gray-800 rounded-full hover:bg-[#FF007F] transition"
                 aria-label="Instagram"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <svg
-                  className="w-5 h-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M6.94 8.94l-2.47 2.47c-.2-.2-.47-.2-.67 0l-1.06-1.06a.5.5 0 010-.67l2.47-2.47c.2-.2.47-.2.67 0l1.06 1.06a.5.5 0 010 .67z" />
-                </svg>
+                <FaInstagram className="text-white text-lg" />
               </a>
             </div>
           </div>
@@ -135,7 +152,7 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="mt-10 text-center text-sm text-gray-500">
           <p>
-            © 2025 <span className="text-indigo-400">OAS-NEON</span>. Všechna
+            © 2025 <span className="text-[#FF007F]">OAS-NEON</span>. Všechna
             práva vyhrazena.
           </p>
         </div>

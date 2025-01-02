@@ -1,51 +1,150 @@
 import logo from "../images/logo.webp";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import contact_bck from "../images/contact-bck.webp";
+import { toast } from "react-toastify";
 
 export default function ContactForm() {
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Jméno je povinné"),
+    email: Yup.string().email("Neplatný email").required("Email je povinný"),
+    phone: Yup.string()
+      .matches(/^\+?\d{9,15}$/, "Neplatné telefonní číslo")
+      .required("Telefon je povinný"),
+    message: Yup.string().required("Zpráva je povinná"),
+  });
+
+  const initialValues = {
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  };
+
+  const handleSubmit = async (
+    values:
+      | string
+      | Record<string, string>
+      | string[][]
+      | URLSearchParams
+      | undefined,
+    { resetForm }: any
+  ) => {
+    try {
+      const response = await fetch("send_email.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(values),
+      });
+      const result = await response.json();
+      if (result.success) {
+        toast.success(result.message);
+        resetForm();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      toast.error("Chyba při odesílání e-mailu. Zkuste to prosím znovu.");
+    }
+  };
+
   return (
     <section
       id="kontakt"
-      className="py-24 bg-transparent flex items-center justify-center min-h-screen"
+      className="py-24 bg-transparent flex items-center justify-center min-h-screen px-3"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 backdrop-blur-xl rounded-2xl">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-14 backdrop-blur-xl rounded-2xl py-12">
         <div className="absolute inset-0 bg-[#dbdbd9] opacity-10 pointer-events-none rounded-2xl"></div>
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-24">
           <div className="flex items-center lg:mb-0 mb-10">
-            <div className="">
+            <div className="w-full">
               <h2
-                className="text-[#00ff00] font-manrope text-4xl font-bold leading-10 mb-9 lg:text-left text-center"
+                className="text-[#ff007f] font-manrope text-4xl font-bold leading-10 mb-9 lg:text-left text-center"
                 style={{
                   textShadow:
-                    "0 0 20px rgba(0, 255, 0, 0.8), 0 0 30px rgba(0, 255, 255, 0.6)",
+                    "0 0 20px rgba(255, 0, 128, 0.8), 0 0 30px rgba(255, 0, 128, 0.6)",
+                  fontFamily: "mexcellent",
                 }}
               >
                 Ozvěte se nám
               </h2>
-              <form action="#">
-                <input
-                  type="text"
-                  className="w-full h-14 shadow-sm text-gray-600 placeholder-text-400 text-lg font-normal leading-7 rounded-full border border-gray-200 focus:outline-none py-2 px-4 mb-8"
-                  placeholder="Jméno"
-                />
-                <input
-                  type="email"
-                  className="w-full h-14 shadow-sm text-gray-600 placeholder-text-400 text-lg font-normal leading-7 rounded-full border border-gray-200 focus:outline-none py-2 px-4 mb-8"
-                  placeholder="Email"
-                />
-                <textarea
-                  name=""
-                  id="text"
-                  className="w-full h-48 shadow-sm resize-none text-gray-600 placeholder-text-400 text-lg font-normal leading-7 rounded-2xl border border-gray-200 focus:outline-none px-4 py-4 mb-8"
-                  placeholder="Zpráva"
-                ></textarea>
-                <button className="w-full h-12 text-center text-white text-base font-semibold leading-6 rounded-full bg-indigo-600 shadow transition-all duration-700 hover:bg-indigo-800">
-                  Odeslat!
-                </button>
-              </form>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+              >
+                {({ isSubmitting }) => (
+                  <Form>
+                    <div className="mb-8">
+                      <Field
+                        name="name"
+                        type="text"
+                        className="w-full h-14 shadow-sm text-gray-600 placeholder-text-400 text-lg font-normal leading-7 rounded-full border border-gray-200 focus:outline-none py-2 px-4"
+                        placeholder="Jméno"
+                      />
+                      <ErrorMessage
+                        name="name"
+                        component="div"
+                        className="text-[#FF007F] text-sm mt-1"
+                      />
+                    </div>
+                    <div className="mb-8">
+                      <Field
+                        name="email"
+                        type="email"
+                        className="w-full h-14 shadow-sm text-gray-600 placeholder-text-400 text-lg font-normal leading-7 rounded-full border border-gray-200 focus:outline-none py-2 px-4"
+                        placeholder="Email"
+                      />
+                      <ErrorMessage
+                        name="email"
+                        component="div"
+                        className="text-[#FF007F] text-sm mt-1"
+                      />
+                    </div>
+                    <div className="mb-8">
+                      <Field
+                        name="phone"
+                        type="tel"
+                        className="w-full h-14 shadow-sm text-gray-600 placeholder-text-400 text-lg font-normal leading-7 rounded-full border border-gray-200 focus:outline-none py-2 px-4"
+                        placeholder="Telefon"
+                      />
+                      <ErrorMessage
+                        name="phone"
+                        component="div"
+                        className="text-[#FF007F] text-sm mt-1"
+                      />
+                    </div>
+                    <div className="mb-8">
+                      <Field
+                        name="message"
+                        as="textarea"
+                        className="w-full h-48 shadow-sm resize-none text-gray-600 placeholder-text-400 text-lg font-normal leading-7 rounded-2xl border border-gray-200 focus:outline-none px-4 py-4"
+                        placeholder="Zpráva"
+                      />
+                      <ErrorMessage
+                        name="message"
+                        component="div"
+                        className="text-[#FF007F] text-sm mt-1"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full h-12 text-center text-white text-base font-semibold leading-6 rounded-full bg-[#FF007F] shadow transition-all duration-700 hover:bg-[#C1053F]"
+                    >
+                      Odeslat!
+                    </button>
+                  </Form>
+                )}
+              </Formik>
             </div>
           </div>
-          <div className="lg:max-w-xl w-full h-[600px] flex items-center justify-center  bg-cover bg-no-repeat bg-black my-4 rounded-2xl">
+          <div
+            className="lg:max-w-xl w-full h-[600px] flex items-center justify-center bg-cover bg-no-repeat my-4 rounded-2xl"
+            style={{ backgroundImage: `url(${contact_bck})` }}
+          >
             <div className="">
-              <div className="lg:w-96 w-auto h-auto bg-white shadow-xl lg:p-6 p-4">
+              <div className="lg:w-96 w-auto h-auto bg-white shadow-xl lg:p-6 p-4 rounded-2xl">
                 <img src={logo} alt="logo" className="mb-6 mx-auto w-2/5" />
                 <a
                   onClick={(e) => {
@@ -64,7 +163,7 @@ export default function ContactForm() {
                   >
                     <path
                       d="M22.3092 18.3098C22.0157 18.198 21.8689 18.1421 21.7145 18.1287C21.56 18.1154 21.4058 18.1453 21.0975 18.205L17.8126 18.8416C17.4392 18.9139 17.2525 18.9501 17.0616 18.9206C16.8707 18.891 16.7141 18.8058 16.4008 18.6353C13.8644 17.2551 12.1853 15.6617 11.1192 13.3695C10.9964 13.1055 10.935 12.9735 10.9133 12.8017C10.8917 12.6298 10.9218 12.4684 10.982 12.1456L11.6196 8.72559C11.6759 8.42342 11.7041 8.27233 11.6908 8.12115C11.6775 7.96998 11.6234 7.82612 11.5153 7.5384L10.6314 5.18758C10.37 4.49217 10.2392 4.14447 9.95437 3.94723C9.6695 3.75 9.29804 3.75 8.5551 3.75H5.85778C4.58478 3.75 3.58264 4.8018 3.77336 6.06012C4.24735 9.20085 5.64674 14.8966 9.73544 18.9853C14.0295 23.2794 20.2151 25.1426 23.6187 25.884C24.9335 26.1696 26.0993 25.1448 26.0993 23.7985V21.2824C26.0993 20.5428 26.0993 20.173 25.9034 19.8888C25.7076 19.6046 25.362 19.4729 24.6708 19.2096L22.3092 18.3098Z"
-                      stroke="#000000"
+                      stroke="#111111"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -169,33 +268,6 @@ export default function ContactForm() {
                       </defs>
                     </svg>
                   </a>
-                  {/*<a
-                    onClick={(e) => {
-                      e.preventDefault();
-                    }}
-                    className="mr-6"
-                    aria-label="Facebook"
-                  >
-                    <svg
-                      width="31"
-                      height="30"
-                      viewBox="0 0 31 30"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <rect
-                        x="0.884766"
-                        width="30"
-                        height="30"
-                        rx="15"
-                        fill="#33CCFF"
-                      ></rect>
-                      <path
-                        d="M23.5888 10.2039C23.0935 10.4171 22.5727 10.5655 22.0394 10.6456C22.2888 10.6028 22.6556 10.154 22.8017 9.97236C23.0235 9.69835 23.1926 9.38555 23.3003 9.04985C23.3003 9.02491 23.3253 8.9893 23.3003 8.97149C23.2878 8.96463 23.2737 8.96103 23.2594 8.96103C23.2451 8.96103 23.231 8.96463 23.2184 8.97149C22.6393 9.28508 22.023 9.52442 21.3841 9.68385C21.3618 9.69066 21.3381 9.69127 21.3155 9.68562C21.2929 9.67997 21.2723 9.66828 21.2558 9.6518C21.2061 9.59257 21.1526 9.53665 21.0956 9.48439C20.8349 9.25089 20.5393 9.05979 20.2193 8.91806C19.7875 8.74088 19.321 8.66415 18.8552 8.69366C18.4031 8.72221 17.9618 8.84345 17.5586 9.04985C17.1616 9.26745 16.8127 9.56306 16.5328 9.91894C16.2384 10.2852 16.0259 10.7103 15.9095 11.1656C15.8135 11.5986 15.8027 12.0462 15.8775 12.4835C15.8775 12.5583 15.8775 12.5689 15.8133 12.5583C13.2738 12.1843 11.1901 11.2831 9.48752 9.34904C9.41272 9.26356 9.37354 9.26356 9.31299 9.34904C8.57213 10.4746 8.93187 12.2555 9.85795 13.1353C9.98261 13.2528 10.1108 13.3668 10.2462 13.4737C9.82159 13.4435 9.40736 13.3284 9.02804 13.1353C8.9568 13.089 8.91762 13.1139 8.91406 13.1994C8.90397 13.3179 8.90397 13.4371 8.91406 13.5556C8.98838 14.1235 9.21222 14.6616 9.56267 15.1147C9.91313 15.5678 10.3776 15.9197 10.9087 16.1343C11.0381 16.1898 11.173 16.2316 11.3112 16.259C10.9181 16.3364 10.515 16.3484 10.118 16.2946C10.0325 16.2768 10.0004 16.3231 10.0325 16.405C10.5561 17.8298 11.6923 18.2643 12.5258 18.5065C12.6397 18.5243 12.7537 18.5243 12.882 18.5528C12.882 18.5528 12.882 18.5528 12.8606 18.5742C12.6148 19.023 11.6211 19.3258 11.1651 19.4825C10.333 19.7814 9.44574 19.8956 8.565 19.8173C8.42609 19.7959 8.39403 19.7995 8.35842 19.8173C8.3228 19.8351 8.35842 19.8743 8.3976 19.9099C8.57569 20.0274 8.75378 20.1307 8.939 20.2305C9.49038 20.5312 10.0733 20.7701 10.6772 20.9428C13.8045 21.8048 17.3236 21.1708 19.6708 18.8378C21.5158 17.007 22.1641 14.4817 22.1641 11.9527C22.1641 11.8566 22.2816 11.7996 22.3493 11.7497C22.8161 11.386 23.2276 10.9565 23.571 10.4746C23.6305 10.4027 23.661 10.3113 23.6565 10.2181C23.6565 10.1647 23.6565 10.1754 23.5888 10.2039Z"
-                        fill="white"
-                      ></path>
-                    </svg>
-                  </a>*/}
                 </div>
               </div>
             </div>

@@ -14,6 +14,9 @@ export default function Work(props: WorkProps) {
       color: "#ff007f", // Růžová
       shadow:
         "0 0 20px rgba(255, 0, 128, 0.8), 0 0 30px rgba(255, 0, 128, 0.6)",
+      buttonShadow:
+        "0 0 20px rgba(255, 0, 128, 0.8), 0 0 30px rgba(255, 0, 128, 0.6)",
+      textColor: "#000000",
       image: neony,
       id: "neony",
       link: "/galerie",
@@ -24,6 +27,9 @@ export default function Work(props: WorkProps) {
       color: "#00ffff", // Tyrkysová
       shadow:
         "0 0 20px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.6)",
+      buttonShadow:
+        "0 0 20px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.6)",
+      textColor: "#000000",
       image: potisky,
       id: "potisky",
       link: "/galerie",
@@ -34,6 +40,9 @@ export default function Work(props: WorkProps) {
       color: "#ffff00", // Žlutá
       shadow:
         "0 0 20px rgba(255, 255, 0, 0.8), 0 0 30px rgba(255, 255, 0, 0.6)",
+      buttonShadow:
+        "0 0 20px rgba(255, 255, 0, 0.8), 0 0 30px rgba(255, 255, 0, 0.6)",
+      textColor: "#000000",
       image: samolepky,
       id: "samolepky",
       link: "/galerie",
@@ -47,34 +56,6 @@ export default function Work(props: WorkProps) {
         src={texts[index].image}
         alt="About Us image"
       />
-    );
-  };
-
-  const text = (index: number) => {
-    const { heading, text, color, shadow, link } = texts[index];
-    return (
-      <div className="w-full flex-col justify-start lg:items-start items-center gap-8 flex">
-        <h2
-          className="text-4xl font-bold font-manrope lg:text-start text-center"
-          style={{
-            color: color,
-            textShadow: shadow,
-          }}
-        >
-          {heading}
-        </h2>
-        <p className="text-gray-300 text-lg leading-relaxed lg:text-start text-center">
-          {text}
-        </p>
-        <button
-          onClick={() =>
-            (window.location.href = `${link}?category=${texts[index].id}`)
-          }
-          className="px-6 py-3 bg-indigo-600 hover:bg-indigo-800 rounded-lg shadow-lg text-white font-medium text-lg transition-all duration-500 text-justify"
-        >
-          Zjistí více
-        </button>
-      </div>
     );
   };
 
@@ -117,6 +98,7 @@ export default function Work(props: WorkProps) {
                   style={{
                     color: texts[props.index].color,
                     textShadow: texts[props.index].shadow,
+                    fontFamily: "mexcellent",
                   }}
                 >
                   {texts[props.index].heading}
@@ -125,12 +107,12 @@ export default function Work(props: WorkProps) {
                   {texts[props.index].text}
                 </p>
                 <button
-                  onClick={() =>
-                    (window.location.href = `${
-                      texts[props.index].link
-                    }?category=${texts[props.index].id}`)
-                  }
-                  className="px-6 py-3 bg-blue-700 hover:bg-blue-900 rounded-lg shadow-lg text-white font-medium text-lg transition-all duration-500"
+                  onClick={(event) => event.preventDefault()}
+                  style={{
+                    backgroundColor: texts[props.index].color, // Barva tlačítka
+                    boxShadow: texts[props.index].buttonShadow, // Neonový stín
+                  }}
+                  className="px-6 py-3 rounded-lg shadow-lg font-medium text-lg transition-all duration-500 text-neutral-800"
                 >
                   Zjisti více
                 </button>

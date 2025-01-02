@@ -22,7 +22,14 @@ export default function Header() {
       <div className="relative isolate px-6 pt-14 lg:px-8">
         <div className="mx-auto max-w-4xl py-32 sm:py-48 lg:py-56">
           <div className="text-center">
-            <h1 className="text-6xl font-extrabold tracking-tight leading-tight sm:text-7xl">
+            <h1
+              className="text-6xl font-extrabold tracking-tight leading-tight sm:text-7xl text-[#E60202]"
+              style={{
+                fontFamily: "mexcellent",
+                textShadow:
+                  "0 0 20px rgba(230, 2, 2, 0.8), 0 0 30px rgba(230, 2, 2, 0.6)",
+              }}
+            >
               Reklamy a zábava na míru, které oslní
             </h1>
             <p className="mt-6 text-lg font-medium text-gray-300 sm:text-xl">
@@ -35,21 +42,25 @@ export default function Header() {
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <a
                 onClick={(e) => {
-                  e.preventDefault();
                   handleScroll("kontakt");
                 }}
-                className="rounded-md bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="rounded-md bg-[#ff007f] px-5 py-3 cursor-pointer text-sm font-semibold text-white shadow-lg hover:bg-[#BF053D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff007f] transition-all duration-300"
                 aria-label="Kontaktujte nás"
+                style={{
+                  textShadow: "0 0 10px #ff007f, 0 0 20px #ff007f",
+                }}
               >
                 Kontaktujte nás
               </a>
               <a
                 onClick={(e) => {
-                  e.preventDefault();
                   handleScroll("about-us");
                 }}
-                className="text-sm font-semibold leading-6 text-indigo-400 hover:text-indigo-300"
+                className="text-sm font-semibold cursor-pointer leading-6 text-[#00ff00] hover:text-[#89fa8f] transition-all duration-300"
                 aria-label="Zjistěte více"
+                style={{
+                  textShadow: "0 0 8px #00ff00, 0 0 16px #00ff00",
+                }}
               >
                 Zjistěte více <span aria-hidden="true">→</span>
               </a>

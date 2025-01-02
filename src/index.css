@@ -14,3 +14,8 @@ body {
   color: #fff;
   background: #ff007f;
 }
+@font-face {
+  font-family: "mexcellent";
+  src: url("./fonts/MEXCELLENT 3D.otf") format("opentype"),
+    url("./fonts/MEXCELLENT RG.otf") format("opentype");
+}

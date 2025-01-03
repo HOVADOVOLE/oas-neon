@@ -75,17 +75,26 @@ export default function Navbar() {
       >
         {/* Logo */}
         <div className="flex items-center">
-          <a
+          <button
             onClick={(e) => {
               e.preventDefault();
               handleScroll("");
             }}
-            className="-m-1.5 p-1.5 cursor-pointer"
+            className="cursor-pointer focus:outline-none z-10"
             aria-label="OAS-NEON"
+            style={{
+              padding: 0, // Zajišťuje, že žádné extra mezery kolem tlačítka neovlivní design
+              background: "none",
+              border: "none",
+            }}
           >
             <span className="sr-only">OAS-NEON</span>
-            <img alt="/" src={logo} className="h-12 w-auto" />
-          </a>
+            <img
+              alt="logo"
+              src={logo}
+              className="h-12 w-auto block" // `block` zajistí, že celá oblast obrázku bude klikací
+            />
+          </button>
         </div>
 
         {/* Desktop Navigation - Centered */}

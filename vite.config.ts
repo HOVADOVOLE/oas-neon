@@ -9,6 +9,7 @@ export default defineConfig({
       global: "rollup-plugin-polyfill-node/polyfills/global.js",
     },
   },
+  base: "/",
   build: {
     rollupOptions: {
       plugins: [rollupNodePolyFill()],

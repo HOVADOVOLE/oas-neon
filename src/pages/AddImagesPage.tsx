@@ -12,6 +12,7 @@ import Navbar from "../components/Navbar";
 import { toast } from "react-toastify";
 import UploadPopup from "../components/UploadPopup";
 import Footer from "../components/Footer";
+import { Helmet } from "react-helmet-async";
 
 interface ImageItem {
   id: number;
@@ -152,123 +153,137 @@ const AddImagesPage: React.FC = () => {
   };
 
   return (
-    <div className="py-12 bg-[#111111] text-white min-h-screen flex flex-col items-center w-full">
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-[#111111] bg-opacity-90 z-50">
-          <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-lg font-semibold mb-4">Potvrzení smazání</h2>
-            <p className="text-sm mb-6">
-              Opravdu chcete smazat tento obrázek? Tuto akci nelze vrátit zpět.
-            </p>
-            <div className="flex justify-end gap-4">
-              <button
-                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg"
-                onClick={() => setShowDeleteConfirm(null)}
-              >
-                Zrušit
-              </button>
-              <button
-                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
-                onClick={() => handleDeleteImage(showDeleteConfirm)}
-              >
-                Smazat
-              </button>
+    <>
+      <Helmet>
+        <title>Správa obrázků | OAS-NEON</title>
+        <meta
+          name="description"
+          content="Systémový dashboard pro správu obrázků na webu OAS-NEON."
+        />
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
+      <div className="py-12 bg-[#111111] text-white min-h-screen flex flex-col items-center w-full">
+        {showDeleteConfirm && (
+          <div className="fixed inset-0 flex items-center justify-center bg-[#111111] bg-opacity-90 z-50">
+            <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg w-96">
+              <h2 className="text-lg font-semibold mb-4">Potvrzení smazání</h2>
+              <p className="text-sm mb-6">
+                Opravdu chcete smazat tento obrázek? Tuto akci nelze vrátit
+                zpět.
+              </p>
+              <div className="flex justify-end gap-4">
+                <button
+                  className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg"
+                  onClick={() => setShowDeleteConfirm(null)}
+                >
+                  Zrušit
+                </button>
+                <button
+                  className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
+                  onClick={() => handleDeleteImage(showDeleteConfirm)}
+                >
+                  Smazat
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <Navbar />
-      {loading ? (
-        <div className="flex items-center justify-center h-screen">
-          <div className="loader border-t-4 border-b-4 border-[#FF007F] rounded-full w-12 h-12 animate-spin"></div>
-        </div>
-      ) : (
-        <>
-          <div className="w-4/5 flex flex-wrap items-center justify-between my-8 gap-4 sm:gap-0">
-            <select
-              value={filterCategory || ""}
-              onChange={(e) =>
-                setFilterCategory(
-                  e.target.value ? Number(e.target.value) : null
-                )
-              }
-              className="py-3 px-4 bg-gray-800 text-white rounded-lg shadow-lg w-full sm:w-1/2 md:w-1/4 lg:w-1/5 xl:w-1/6 transition-all focus:outline-none focus:ring-2 focus:ring-red-500"
-            >
-              <option value="">Všechny</option>
-              <option value={1}>Neony</option>
-              <option value={2}>Potisky</option>
-              <option value={3}>Polepy</option>
-            </select>
-
-            <button
-              onClick={() => setIsPopupOpen(true)}
-              className="px-6 py-2 bg-[#FF007F] hover:bg-[#BF053D] text-white font-semibold rounded-lg shadow-md focus:outline-none sm:ml-auto w-full sm:w-1/3 md:w-1/3 lg:w-1/5 xl:w-1/12"
-            >
-              Nahrát Obrázky
-            </button>
-            {isPopupOpen && (
-              <UploadPopup
-                onClose={() => setIsPopupOpen(false)}
-                onUploadComplete={loadImages}
-              />
-            )}
+        <Navbar />
+        {loading ? (
+          <div className="flex items-center justify-center h-screen">
+            <div className="loader border-t-4 border-b-4 border-[#FF007F] rounded-full w-12 h-12 animate-spin"></div>
           </div>
+        ) : (
+          <>
+            <div className="w-4/5 flex flex-wrap items-center justify-between my-8 gap-4 sm:gap-0">
+              <select
+                value={filterCategory || ""}
+                onChange={(e) =>
+                  setFilterCategory(
+                    e.target.value ? Number(e.target.value) : null
+                  )
+                }
+                className="py-3 px-4 bg-gray-800 text-white rounded-lg shadow-lg w-full sm:w-1/2 md:w-1/4 lg:w-1/5 xl:w-1/6 transition-all focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                <option value="">Všechny</option>
+                <option value={1}>Neony</option>
+                <option value={2}>Potisky</option>
+                <option value={3}>Polepy</option>
+              </select>
 
-          <DndContext
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={filteredImages.map((image) => image.id.toString())}
-              strategy={verticalListSortingStrategy}
+              <button
+                onClick={() => setIsPopupOpen(true)}
+                className="px-6 py-2 bg-[#FF007F] hover:bg-[#BF053D] text-white font-semibold rounded-lg shadow-md focus:outline-none sm:ml-auto w-full sm:w-1/3 md:w-1/3 lg:w-1/5 xl:w-1/12"
+              >
+                Nahrát Obrázky
+              </button>
+              {isPopupOpen && (
+                <UploadPopup
+                  onClose={() => setIsPopupOpen(false)}
+                  onUploadComplete={loadImages}
+                />
+              )}
+            </div>
+
+            <DndContext
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
             >
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-4/5">
-                {filteredImages.map((image) => (
-                  <div
-                    key={image.id}
-                    className="relative flex flex-col gap-3 bg-gray-800 p-4 shadow-lg rounded-lg"
-                  >
-                    <SortableItem image={image} />
-                    <button
-                      className="absolute top-2 right-2 bg-red-500 text-black rounded-full w-6 h-6 flex items-center justify-center shadow-lg"
-                      onClick={() => setShowDeleteConfirm(image.id)}
+              <SortableContext
+                items={filteredImages.map((image) => image.id.toString())}
+                strategy={verticalListSortingStrategy}
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-4/5">
+                  {filteredImages.map((image) => (
+                    <div
+                      key={image.id}
+                      className="relative flex flex-col gap-3 bg-gray-800 p-4 shadow-lg rounded-lg"
                     >
-                      ×
-                    </button>
-                    <div className="flex flex-col gap-2 mt-2">
-                      <input
-                        type="text"
-                        value={image.caption}
-                        onChange={(e) =>
-                          handleCaptionChange(image.id, e.target.value)
-                        }
-                        placeholder="Přidejte popis..."
-                        className="w-full p-2 bg-gray-700 text-white rounded"
-                      />
-                      <select
-                        value={image.category_id}
-                        onChange={(e) =>
-                          handleCategoryChange(image.id, Number(e.target.value))
-                        }
-                        className="w-full p-2 bg-gray-700 text-white rounded"
+                      <SortableItem image={image} />
+                      <button
+                        className="absolute top-2 right-2 bg-red-500 text-black rounded-full w-6 h-6 flex items-center justify-center shadow-lg"
+                        onClick={() => setShowDeleteConfirm(image.id)}
                       >
-                        <option value={1}>Neony</option>
-                        <option value={2}>Potisky</option>
-                        <option value={3}>Polepy</option>
-                      </select>
+                        ×
+                      </button>
+                      <div className="flex flex-col gap-2 mt-2">
+                        <input
+                          type="text"
+                          value={image.caption}
+                          onChange={(e) =>
+                            handleCaptionChange(image.id, e.target.value)
+                          }
+                          placeholder="Přidejte popis..."
+                          className="w-full p-2 bg-gray-700 text-white rounded"
+                        />
+                        <select
+                          value={image.category_id}
+                          onChange={(e) =>
+                            handleCategoryChange(
+                              image.id,
+                              Number(e.target.value)
+                            )
+                          }
+                          className="w-full p-2 bg-gray-700 text-white rounded"
+                        >
+                          <option value={1}>Neony</option>
+                          <option value={2}>Potisky</option>
+                          <option value={3}>Polepy</option>
+                        </select>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
-          <div className="w-full bottom-0 mt-3">
-            <Footer />
-          </div>
-        </>
-      )}
-    </div>
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
+            <div className="w-full bottom-0 mt-3">
+              <Footer />
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async"; // Import Helmet
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
 import ImageManager from "../utils/Image";
-import Navbar from "./Navbar";
-import ErrorBoundary from "./ErrorBoundary";
-import Footer from "./Footer";
-import seamless_gallery from "../images/seamless-gallery.jpeg";
+import Navbar from "../components/Navbar";
+import ErrorBoundary from "../components/ErrorBoundary";
+import Footer from "../components/Footer";
+import seamless_gallery from "../images/seamless-gallery.webp";
 import { TailSpin } from "react-loader-spinner";
 
 interface ImageList {
@@ -17,6 +18,35 @@ interface ImageList {
   category_id: number;
   position?: number;
 }
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Galerie | OAS-NEON",
+  description:
+    "Galerie našich produktů: neonové reklamy, potisky na textil a polepy.",
+  url: "https://oas-neon.com/galerie",
+  hasPart: [
+    {
+      "@type": "ImageObject",
+      name: "Neonová reklama 1",
+      contentUrl: "https://oas-neon.com/images/neon1.jpg",
+      description: "Ukázka neonové reklamy vytvořené na zakázku.",
+    },
+    {
+      "@type": "ImageObject",
+      name: "Potisk trička",
+      contentUrl: "https://oas-neon.com/images/potisk1.jpg",
+      description: "Detailní potisk trička s vlastním designem.",
+    },
+    {
+      "@type": "ImageObject",
+      name: "Polep na auto",
+      contentUrl: "https://oas-neon.com/images/polep1.jpg",
+      description: "Polep na firemní automobil, vytvořený pro našeho klienta.",
+    },
+  ],
+};
 
 const ImageGallery: React.FC = () => {
   const [allImages, setAllImages] = useState<ImageList[]>([]);
@@ -36,7 +66,7 @@ const ImageGallery: React.FC = () => {
         setAllImages(images);
         setFilteredImages(images);
       }
-      setIsGalleryLoading(false); // Skryje spinner po načtení všech obrázků
+      setIsGalleryLoading(false);
     };
 
     loadImages();
@@ -72,7 +102,7 @@ const ImageGallery: React.FC = () => {
 
   const handleOpenLightbox = (index: number) => {
     setCurrentIndex(index);
-    setIsImageLoading(true); // Zobrazí spinner při otevření obrázku
+    setIsImageLoading(true);
   };
 
   const handleCloseLightbox = () => {
@@ -100,17 +130,39 @@ const ImageGallery: React.FC = () => {
   };
 
   const handleImageLoad = () => {
-    setIsImageLoading(false); // Jakmile je obrázek načten, spinner se skryje
+    setIsImageLoading(false);
   };
 
   return (
     <>
+      <Helmet>
+        <title>Galerie | OAS-NEON</title>
+        <meta
+          name="description"
+          content="Prohlédněte si galerii neonových reklam, potisků a polepů od OAS-NEON. Kvalitní výroba na míru s více než 25 lety zkušeností."
+        />
+        <meta
+          name="keywords"
+          content="neony, reklamy, potisky, polepy, galerie, OAS-NEON"
+        />
+        <meta name="author" content="OAS-NEON" />
+        <meta property="og:title" content="Galerie | OAS-NEON" />
+        <meta
+          property="og:description"
+          content="Galerie našich produktů: neonové reklamy, potisky a polepy. Prohlédněte si kvalitní práci OAS-NEON."
+        />
+        <meta property="og:image" content="/path/to/gallery-image.jpg" />
+        <meta property="og:url" content="https://oas-neon.com/galerie" />
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Helmet>
       <div
         className="py-12 bg-[#111111] text-white min-h-screen flex flex-col items-center w-full"
         style={{
           backgroundImage: `url(${seamless_gallery})`,
-          backgroundSize: "contain", // Zajistí, že se obrázek přizpůsobí, ale bude opakovatelný
-          backgroundRepeat: "repeat", // Opakuje obrázek směrem dolů
+          backgroundSize: "contain",
+          backgroundRepeat: "repeat",
           width: "100vw",
           maxWidth: "100%",
           margin: "0 auto",
@@ -144,7 +196,6 @@ const ImageGallery: React.FC = () => {
               >
                 Galerie
               </h1>
-
               <div className="text-left mb-8 w-4/5">
                 <select
                   id="category"
@@ -158,7 +209,6 @@ const ImageGallery: React.FC = () => {
                   <option value="3">Polepy</option>
                 </select>
               </div>
-
               <div className="w-4/5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {filteredImages.map((image, index) => (
                   <div
@@ -166,14 +216,12 @@ const ImageGallery: React.FC = () => {
                     className="relative group cursor-pointer"
                     onClick={() => handleOpenLightbox(index)}
                   >
-                    {/* Obrázek */}
                     <img
                       src={image.filePath}
                       alt={image.caption}
                       className="object-cover w-full h-full rounded-lg shadow-lg"
                       loading="lazy"
                     />
-                    {/* Overlay s textem */}
                     <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       {image.caption && (
                         <p className="text-white text-center font-semibold px-4 text-xl">
@@ -184,7 +232,6 @@ const ImageGallery: React.FC = () => {
                   </div>
                 ))}
               </div>
-
               <ErrorBoundary>
                 {currentIndex !== null && filteredImages[currentIndex] && (
                   <>
@@ -212,7 +259,7 @@ const ImageGallery: React.FC = () => {
                       onMovePrevRequest={handleMovePrev}
                       onMoveNextRequest={handleMoveNext}
                       imageCaption={filteredImages[currentIndex].caption || ""}
-                      onImageLoad={handleImageLoad} // Zavoláno, jakmile obrázek je načten
+                      onImageLoad={handleImageLoad}
                     />
                   </>
                 )}

@@ -1,0 +1,15 @@
+# Povolení pro všechny vyhledávače
+User-agent: *
+
+# Zákaz indexace citlivých nebo nevhodných částí webu
+Disallow: /admin/              # Admin panel (pokud existuje)
+Disallow: /services/           # Služby jako PHP skripty
+Disallow: /login/              # Přihlašovací stránka
+Disallow: /AddImagesPage       # Stránka viditelná jen pro adminy
+Disallow: /ProtectedRoute      # Chráněné cesty
+
+# Povolení indexace všech ostatních částí
+Allow: /
+
+# Umístění sitemap.xml
+Sitemap: https://oas-neon.cz/sitemap.xml

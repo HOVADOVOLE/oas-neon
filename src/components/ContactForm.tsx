@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import logo from "../images/logo.webp";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -5,6 +6,9 @@ import contact_bck from "../images/contact-bck.webp";
 import { toast } from "react-toastify";
 
 export default function ContactForm() {
+  const [isVisible, setIsVisible] = useState(false);
+  const formRef = useRef<HTMLDivElement | null>(null);
+
   const validationSchema = Yup.object({
     name: Yup.string().required("Jméno je povinné"),
     email: Yup.string().email("Neplatný email").required("Email je povinný"),
@@ -21,6 +25,26 @@ export default function ContactForm() {
     message: "",
   };
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (formRef.current) {
+      observer.observe(formRef.current);
+    }
+
+    return () => {
+      if (formRef.current) {
+        observer.unobserve(formRef.current);
+      }
+    };
+  }, []);
   const handleSubmit = async (
     values:
       | string
@@ -51,7 +75,10 @@ export default function ContactForm() {
   return (
     <section
       id="kontakt"
-      className="py-24 bg-transparent flex items-center justify-center min-h-screen px-3"
+      ref={formRef}
+      className={`py-24 bg-transparent flex items-center justify-center min-h-screen px-3 ${
+        isVisible ? "animate-slide-up" : "opacity-0 translate-y-10"
+      }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-14 backdrop-blur-xl rounded-2xl py-12">
         <div className="absolute inset-0 bg-[#dbdbd9] opacity-10 pointer-events-none rounded-2xl"></div>

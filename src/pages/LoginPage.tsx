@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async"; // Import Helmet
 import logo from "../images/logo.webp";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -32,7 +33,7 @@ const LoginPage = () => {
       values.username === storedUsername &&
       values.password === storedPassword
     ) {
-      console.log("Uživatel přihlášen");
+      toast.success("Uživatel přihlášen");
       login(); // Zavolá funkci login z AuthContext
       setErrorMessage(null);
       navigate("/upload");

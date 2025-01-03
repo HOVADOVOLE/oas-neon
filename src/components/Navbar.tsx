@@ -23,6 +23,7 @@ export default function Navbar() {
 
   const handleScroll = async (id: string) => {
     if (location.pathname !== "/") {
+      // Přesměrování na domovskou stránku
       await navigate("/");
       setTimeout(() => {
         if (id) {
@@ -30,12 +31,19 @@ export default function Navbar() {
           if (section) {
             section.scrollIntoView({ behavior: "smooth" });
           }
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }
       }, 100);
-    } else if (id) {
-      const section = document.getElementById(id);
-      if (section) {
-        section.scrollIntoView({ behavior: "smooth" });
+    } else {
+      // Posun na vrchol nebo do sekce na domovské stránce
+      if (id) {
+        const section = document.getElementById(id);
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth" });
+        }
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
   };
@@ -46,10 +54,8 @@ export default function Navbar() {
       const currentScrollY = window.scrollY;
 
       if (currentScrollY > lastScrollY) {
-        // Uživatel scrolluje dolů
         setIsNavbarVisible(false);
       } else {
-        // Uživatel scrolluje nahoru
         setIsNavbarVisible(true);
       }
 
@@ -76,24 +82,17 @@ export default function Navbar() {
         {/* Logo */}
         <div className="flex items-center">
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              handleScroll("");
-            }}
+            onClick={() => handleScroll("")}
             className="cursor-pointer focus:outline-none z-10"
             aria-label="OAS-NEON"
             style={{
-              padding: 0, // Zajišťuje, že žádné extra mezery kolem tlačítka neovlivní design
+              padding: 0,
               background: "none",
               border: "none",
             }}
           >
             <span className="sr-only">OAS-NEON</span>
-            <img
-              alt="logo"
-              src={logo}
-              className="h-12 w-auto block" // `block` zajistí, že celá oblast obrázku bude klikací
-            />
+            <img alt="logo" src={logo} className="h-12 w-auto block" />
           </button>
         </div>
 
@@ -104,8 +103,13 @@ export default function Navbar() {
               key={item.name}
               onClick={(e) => {
                 e.preventDefault();
-                if (!item.isExternal) handleScroll(item.id);
-                else navigate(`/${item.id}`);
+                if (item.name === "Domů") {
+                  handleScroll("");
+                } else if (!item.isExternal) {
+                  handleScroll(item.id);
+                } else {
+                  navigate(`/${item.id}`);
+                }
               }}
               href={item.isExternal ? `/${item.id}` : `#${item.id}`}
               className="text-lg font-semibold text-white relative px-4 py-2 cursor-pointer transition-transform duration-200 hover:scale-105 hover:brightness-150 group"
@@ -183,7 +187,9 @@ export default function Navbar() {
                     onClick={(e) => {
                       e.preventDefault();
                       setMobileMenuOpen(false);
-                      if (item.isExternal) {
+                      if (item.name === "Domů") {
+                        handleScroll("");
+                      } else if (item.isExternal) {
                         navigate(`/${item.id}`);
                       } else {
                         handleScroll(item.id);

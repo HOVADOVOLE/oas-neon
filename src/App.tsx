@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { ToastContainer } from "react-toastify";
 import { TailSpin } from "react-loader-spinner";
+import ScrollToTop from "./utils/ScrollTOTop";
 
 const HomeDetail = React.lazy(() => import("./pages/HomeDetail"));
 
@@ -32,6 +33,7 @@ function App() {
           {/* Zde obalíme aplikaci */}
           <BrowserRouter>
             <AuthProvider>
+              <ScrollToTop />
               <Suspense
                 fallback={
                   <div className="fixed inset-0 flex items-center justify-center bg-[#111111]">

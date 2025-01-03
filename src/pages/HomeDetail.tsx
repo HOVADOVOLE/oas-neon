@@ -37,6 +37,7 @@ export default function HomeDetail() {
     <>
       <Helmet>
         <title>Domovská stránka | OAS-NEON</title>
+        <link rel="canonical" href="https://oas-neon.com" />
         <meta
           name="description"
           content="OAS-NEON - Výroba neonových reklam, potisků a polepů."

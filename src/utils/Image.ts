@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import imageCompression from "browser-image-compression";
+import { toast } from "react-toastify";
 
 type ImageData = {
   id: number;
@@ -13,10 +14,10 @@ type ImageData = {
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export default class ImageManager {
-  supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+  private supabaseClient = supabaseClient;
   private tableName = "images";
   private bucketName = "images"; // Název bucketu v Supabase Storage
 
@@ -53,8 +54,9 @@ export default class ImageManager {
 
       if (error) throw error;
 
-      console.log(`Category updated for image with ID: ${id}`);
+      //console.log(`Category updated for image with ID: ${id}`);
     } catch (error) {
+      toast.error("Chyba při aktualizaci kategorie obrázku.");
       console.error("Error updating category in SupabaseClient:", error);
       throw error;
     }
@@ -106,8 +108,9 @@ export default class ImageManager {
 
       if (error) throw error;
 
-      console.log(`Image added successfully: ${publicUrl}`);
+      //console.log(`Image added successfully: ${publicUrl}`);
     } catch (error) {
+      toast.error("Chyba při přidání obrázku.");
       console.error("Error adding image to SupabaseClient:", error);
     }
   }
@@ -159,8 +162,9 @@ export default class ImageManager {
 
       if (error) throw error;
 
-      console.log(`Caption updated for image with ID: ${id}`);
+      //console.log(`Caption updated for image with ID: ${id}`);
     } catch (error) {
+      toast.error("Chyba při aktualizaci popisku obrázku.");
       console.error("Error updating caption in SupabaseClient:", error);
     }
   }
@@ -214,8 +218,9 @@ export default class ImageManager {
 
       if (dbError) throw dbError;
 
-      console.log(`Obrázek s ID ${imageId} byl úspěšně smazán.`);
+      //console.log(`Obrázek s ID ${imageId} byl úspěšně smazán.`);
     } catch (error) {
+      toast.error("Chyba při mazání obrázku.");
       console.error("Chyba při mazání obrázku:", error);
       throw error;
     }

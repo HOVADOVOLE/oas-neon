@@ -109,7 +109,6 @@ export default function FAQ() {
   return (
     <>
       <Helmet>
-        <title>Často kladené otázky | OAS-NEON</title>
         <meta
           name="description"
           content="Odpovědi na vaše otázky ohledně výroby neonových reklam, potisků a polepů."

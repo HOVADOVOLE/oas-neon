@@ -66,7 +66,7 @@ export default function Header() {
           <div className="mx-auto max-w-4xl py-32 sm:py-48 lg:py-56">
             <div className="text-center">
               <h1
-                className="text-6xl font-extrabold tracking-tight leading-tight sm:text-7xl text-[#E60202] animate-fall"
+                className=" text-5xl md:text-6xl lg:md:text-6xl font-extrabold tracking-tight leading-tight text-[#E60202] animate-fall"
                 style={{
                   fontFamily: "mexcellent",
                   textShadow:

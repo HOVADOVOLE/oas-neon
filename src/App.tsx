@@ -2,16 +2,17 @@ import React, { Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { HelmetProvider } from "react-helmet-async"; // Import HelmetProvider
-import ImageGallery from "./pages/ImageGallery";
+//import ImageGallery from "./pages/ImageGallery";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AddImagesPage from "./pages/AddImagesPage";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { ToastContainer } from "react-toastify";
 import { TailSpin } from "react-loader-spinner";
-import ScrollToTop from "./utils/ScrollTOTop";
+import ScrollToTop from "./utils/ScrollToTop";
 
 const HomeDetail = React.lazy(() => import("./pages/HomeDetail"));
+const ImageGallery = React.lazy(() => import("./pages/ImageGallery"));
 
 function App() {
   return (

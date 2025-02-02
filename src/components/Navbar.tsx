@@ -112,7 +112,7 @@ export default function Navbar() {
                 }
               }}
               href={item.isExternal ? `/${item.id}` : `#${item.id}`}
-              className="text-lg font-semibold text-white relative px-4 py-2 cursor-pointer transition-transform duration-200 hover:scale-105 hover:brightness-150 group"
+              className="text-[1.4rem] font-semibold text-white relative px-4 py-2 cursor-pointer transition-transform duration-200 hover:scale-105 hover:brightness-150 group"
               style={{
                 color: item.color,
                 textShadow: `0 0 5px ${item.color}, 0 0 10px ${item.color}, 0 0 20px ${item.color}`,
@@ -196,10 +196,9 @@ export default function Navbar() {
                       }
                     }}
                     href={item.isExternal ? `/${item.id}` : `#${item.id}`}
-                    className="block text-base font-semibold text-white hover:bg-gray-700 rounded-lg px-3 py-2 cursor-pointer"
+                    className="block text-xl font-semibold text-white hover:bg-gray-700 rounded-lg px-3 py-2 cursor-pointer"
                     style={{
                       color: item.color,
-                      textShadow: `0 0 5px ${item.color}, 0 0 10px ${item.color}, 0 0 20px ${item.color}`,
                     }}
                     aria-label="Navigation"
                   >

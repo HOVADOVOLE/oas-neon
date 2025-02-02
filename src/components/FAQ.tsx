@@ -10,7 +10,7 @@ const faqData = {
       name: "Jak probíhá výroba neonových reklam?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Neonové reklamy vyrábíme ručně z kvalitních neonových trubic. Proces zahrnuje návrh na míru, výrobu, montáž a instalaci.",
+        text: "Neonové reklamy vyrábíme ručně z kvalitních skleněných trubic. Proces zahrnuje návrh na míru, výrobu, montáž a instalaci.",
       },
     },
     {
@@ -61,7 +61,7 @@ export default function FAQ() {
     {
       question: "Jak probíhá výroba neonových reklam?",
       answer:
-        "Neonové reklamy vyrábíme ručně z kvalitních neonových trubic. Proces zahrnuje návrh na míru, výrobu, montáž a instalaci. Vše je přizpůsobeno vašim potřebám.",
+        "Neonové reklamy vyrábíme ručně z kvalitních skleněných trubic. Proces zahrnuje návrh na míru, výrobu, montáž a instalaci. Vše je přizpůsobeno vašim potřebám.",
     },
     {
       question: "Jaké technologie používáte pro potisky na textil?",

@@ -90,7 +90,7 @@ export default function AboutUs() {
         <div className="w-full max-w-7xl px-4 md:px-5 lg:px-2 mx-auto mb-20 relative rounded-3xl">
           <div
             ref={sectionRef}
-            className={`py-12 px-10 rounded-3xl bg-transparent ${
+            className={`px-4 py-5 md:py-10 lg:py-10 md:px-10 lg:px-10 mx-auto rounded-3xl bg-transparent ${
               isVisible ? "animate-slide-up" : "opacity-0 translate-y-10"
             }`}
             style={{
@@ -141,10 +141,10 @@ export default function AboutUs() {
                   {/* Pravý sloupec */}
                   <div className="text-white flex flex-col lg:items-start xl:items-start md:items-center gap-8">
                     <h2
-                      className="text-5xl font-bold leading-snug font-manrope neon-text xl:text-left md:text-center"
+                      className="sm:text-3xl md:text-5xl text-4xl font-bold leading-snug font-manrope neon-text xl:text-left md:text-center"
                       style={{
                         textShadow:
-                          "0 0 20px rgba(255, 0, 128, 0.8), 0 0 30px rgba(255, 0, 128, 0.6)",
+                          "0 0 12px rgba(255, 0, 128, 0.8), 0 0 30px rgba(255, 0, 128, 0.6)",
                         color: "#ff007f",
                         fontFamily: "mexcellent",
                       }}
